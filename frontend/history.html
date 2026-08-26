@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        LegalMetrix | History
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="history.css"
+    >
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                LM
+            </div>
+
+            <div>
+
+                <h2>
+                    LegalMetrix
+                </h2>
+
+                <span>
+                    Compliance System
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a
+                href="index.html"
+                class="nav-item"
+            >
+                ▣
+                Dashboard
+            </a>
+
+
+            <a
+                href="history.html"
+                class="nav-item active"
+            >
+                ◷
+                History
+            </a>
+
+
+            <a
+                href="profile.html"
+                class="nav-item"
+            >
+                ◎
+                Profile
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Inspection History
+                </h1>
+
+                <p>
+                    Previously scanned products
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <section class="history-card">
+
+
+            <div class="history-controls">
+
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Search product..."
+                >
+
+
+                <select
+                    id="statusFilter"
+                >
+
+                    <option value="ALL">
+                        All
+                    </option>
+
+                    <option value="COMPLIANT">
+                        Compliant
+                    </option>
+
+                    <option value="WARNING">
+                        Warning
+                    </option>
+
+                    <option value="NON_COMPLIANT">
+                        Non-Compliant
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                MRP
+                            </th>
+
+                            <th>
+                                Manufacturing Date
+                            </th>
+
+                            <th>
+                                Score
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="historyTable"
+                    >
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                id="emptyHistory"
+                class="empty-history"
+            >
+
+                No inspections found.
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+<script src="js/history.js"></script>
+
+</body>
+
+</html>

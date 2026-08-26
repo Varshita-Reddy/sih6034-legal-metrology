@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>LegalMetrix | Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="dashboard.css"
+    >
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                LM
+            </div>
+
+            <div>
+                <h2>LegalMetrix</h2>
+
+                <span>
+                    Compliance System
+                </span>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a
+                href="index.html"
+                class="nav-item active"
+            >
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="history.html"
+                class="nav-item"
+            >
+
+                <span>◷</span>
+
+                History
+
+            </a>
+
+
+            <a
+                href="profile.html"
+                class="nav-item"
+            >
+
+                <span>◎</span>
+
+                Profile
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+            >
+
+                <span>←</span>
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Packaged Commodity Compliance Inspection
+                </p>
+
+            </div>
+
+
+            <div class="officer">
+
+                <div
+                    class="officer-avatar"
+                    id="officerAvatar"
+                >
+                    O
+                </div>
+
+                <div>
+
+                    <strong id="officerName">
+                        Officer
+                    </strong>
+
+                    <small>
+                        Enforcement Officer
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= WELCOME ================= -->
+
+        <section class="welcome-card">
+
+            <div>
+
+                <h2>
+                    Welcome back,
+                    <span id="welcomeName">
+                        Officer
+                    </span>
+                    👋
+                </h2>
+
+                <p>
+                    Scan packaged commodities and
+                    check their Legal Metrology declarations.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary-button"
+                onclick="scrollToScanner()"
+            >
+
+                + Scan Product
+
+            </button>
+
+        </section>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ◉
+                </div>
+
+                <div>
+
+                    <span>
+                        Products Scanned
+                    </span>
+
+                    <strong id="totalScans">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <span>
+                        Compliant
+                    </span>
+
+                    <strong id="compliantCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+                    !
+                </div>
+
+                <div>
+
+                    <span>
+                        Violations
+                    </span>
+
+                    <strong id="violationCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+                    %
+                </div>
+
+                <div>
+
+                    <span>
+                        Compliance Rate
+                    </span>
+
+                    <strong id="complianceRate">
+                        0%
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SCANNER ================= -->
+
+        <section
+            id="scanner"
+            class="scanner-section"
+        >
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        Scan Product
+                    </h2>
+
+                    <p>
+                        Upload or capture a product label
+                        to extract compliance information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="scanner-card">
+
+
+                <!-- UPLOAD AREA -->
+
+                <div
+                    id="uploadArea"
+                    class="upload-area"
+                >
+
+                    <div class="upload-icon">
+                        📷
+                    </div>
+
+
+                    <h3>
+                        Upload Product Image
+                    </h3>
+
+
+                    <p>
+                        Upload a clear image of the
+                        product packaging or label.
+                    </p>
+
+
+                    <label
+                        for="productImage"
+                        class="upload-button"
+                    >
+
+                        Choose Image
+
+                    </label>
+
+
+                    <input
+                        type="file"
+                        id="productImage"
+                        accept="image/png,image/jpeg,image/jpg"
+                        hidden
+                    >
+
+
+                    <span class="file-info">
+                        JPG, JPEG or PNG • Maximum 10 MB
+                    </span>
+
+                </div>
+
+
+                <!-- CAMERA -->
+
+                <button
+                    id="cameraButton"
+                    class="secondary-button"
+                >
+
+                    📷 Use Camera
+
+                </button>
+
+
+                <!-- IMAGE PREVIEW -->
+
+                <div
+                    id="previewContainer"
+                    class="preview-container hidden"
+                >
+
+                    <div class="preview-header">
+
+                        <h3>
+                            Selected Product
+                        </h3>
+
+                        <button
+                            id="removeImage"
+                            class="remove-button"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+
+                    <img
+                        id="previewImage"
+                        alt="Product preview"
+                    >
+
+
+                    <div
+                        id="selectedFileName"
+                        class="selected-file"
+                    ></div>
+
+                </div>
+
+
+                <!-- PRODUCT TYPE -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Product Category
+                        </label>
+
+                        <select
+                            id="productCategory"
+                        >
+
+                            <option>
+                                Food / Grocery
+                            </option>
+
+                            <option>
+                                Cosmetics
+                            </option>
+
+                            <option>
+                                Household Product
+                            </option>
+
+                            <option>
+                                Beverage
+                            </option>
+
+                            <option>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ANALYZE -->
+
+                <button
+                    id="analyzeButton"
+                    class="analyze-button"
+                    disabled
+                >
+
+                    Analyze Product
+
+                </button>
+
+
+                <!-- PROGRESS -->
+
+                <div
+                    id="analysisProgress"
+                    class="analysis-progress hidden"
+                >
+
+                    <div>
+                        <span>✓</span>
+                        Image processing
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        OCR text extraction
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Declaration detection
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Compliance checking
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= EXTRACTION RESULT ================= -->
+
+        <section
+            id="extractedSection"
+            class="extracted-section hidden"
+        >
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        Extracted Product Information
+                    </h2>
+
+                    <p>
+                        Information detected from the
+                        uploaded product label.
+                    </p>
+
+                </div>
+
+                <span
+                    id="overallStatus"
+                    class="status-badge"
+                >
+                    Checking
+                </span>
+
+            </div>
+
+
+            <div class="extraction-grid">
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Product Name
+                    </span>
+
+                    <strong id="productName">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Manufacturer
+                    </span>
+
+                    <strong id="manufacturer">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card important">
+
+                    <span>
+                        MRP
+                    </span>
+
+                    <strong id="mrp">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Net Quantity
+                    </span>
+
+                    <strong id="netQuantity">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card important">
+
+                    <span>
+                        Manufacturing / Packing Date
+                    </span>
+
+                    <strong id="manufacturingDate">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Best Before / Use By
+                    </span>
+
+                    <strong id="bestBefore">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Consumer Care
+                    </span>
+
+                    <strong id="consumerCare">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="extraction-card">
+
+                    <span>
+                        Country of Origin
+                    </span>
+
+                    <strong id="countryOrigin">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPLIANCE -->
+
+            <div class="compliance-card">
+
+                <div>
+
+                    <h3>
+                        Compliance Score
+                    </h3>
+
+                    <p>
+                        Preliminary screening result
+                    </p>
+
+                </div>
+
+
+                <strong id="complianceScore">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <!-- VIOLATIONS -->
+
+            <div class="violations-card">
+
+                <h3>
+                    Detected Issues
+                </h3>
+
+                <div id="violationsList">
+
+                </div>
+
+            </div>
+
+
+            <div class="result-actions">
+
+                <button
+                    id="newScanButton"
+                    class="secondary-button"
+                >
+
+                    New Scan
+
+                </button>
+
+
+                <button
+                    id="saveResultButton"
+                    class="primary-button"
+                >
+
+                    Save Inspection
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script src="app.js"></script>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+
+</html>

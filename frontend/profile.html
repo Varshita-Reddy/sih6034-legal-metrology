@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalMetrix | Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">LM</div>
+                <div>
+                    <h2>LegalMetrix</h2>
+                    <span>Compliance System</span>
+                </div>
+            </div>
+
+            <nav class="navigation">
+                <a href="index.html" class="nav-item">▣ Dashboard</a>
+                <a href="history.html" class="nav-item">◷ History</a>
+                <a href="profile.html" class="nav-item active">◎ Profile</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <h1>Officer Profile</h1>
+                    <p>Account and inspection settings</p>
+                </div>
+            </header>
+
+            <section class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">O</div>
+                    <div>
+                        <h2 id="profileName">Officer</h2>
+                        <p>Enforcement Officer</p>
+                    </div>
+                </div>
+
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label for="officerInput">Officer Name</label>
+                        <input id="officerInput" type="text" placeholder="Enter officer name" value="Officer">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unitInput">Assigned Unit</label>
+                        <input id="unitInput" type="text" placeholder="Assigned unit" value="Food Safety Unit">
+                    </div>
+
+                    <button id="saveProfileButton" class="primary-button">Save Profile</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="js/app.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
