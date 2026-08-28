@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const removeButton = document.getElementById('removeImage');
     const newScanButton = document.getElementById('newScanButton');
     const saveResultButton = document.getElementById('saveResultButton');
+    const cameraButton = document.getElementById('cameraButton');
+    const captureButton = document.getElementById('captureButton');
+    const closeCameraButton = document.getElementById('closeCameraButton');
 
     if (input) {
         input.addEventListener('change', function () {
@@ -49,7 +52,79 @@ document.addEventListener('DOMContentLoaded', function () {
     if (analyzeButton) analyzeButton.addEventListener('click', analyzeProduct);
     if (newScanButton) newScanButton.addEventListener('click', resetScanner);
     if (saveResultButton) saveResultButton.addEventListener('click', saveCurrentInspection);
+    if (cameraButton) cameraButton.addEventListener('click', openCamera);
+    if (captureButton) captureButton.addEventListener('click', captureImage);
+    if (closeCameraButton) closeCameraButton.addEventListener('click', closeCamera);
 });
+
+let cameraStream = null;
+
+async function openCamera() {
+    const cameraPanel = document.getElementById('cameraPanel');
+    const cameraPreview = document.getElementById('cameraPreview');
+    const cameraMessage = document.getElementById('cameraMessage');
+    const captureButton = document.getElementById('captureButton');
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Camera access is not supported by this browser.');
+        return;
+    }
+
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' } },
+            audio: false
+        });
+
+        cameraPreview.srcObject = cameraStream;
+        cameraPanel.classList.remove('hidden');
+        cameraPanel.setAttribute('aria-hidden', 'false');
+        cameraMessage.textContent = 'Position the product label inside the frame.';
+        captureButton.disabled = false;
+    } catch (error) {
+        cameraMessage.textContent = 'Camera access was blocked. Check browser permissions and try again.';
+        showToast('Unable to access the camera.');
+    }
+}
+
+function captureImage() {
+    const cameraPreview = document.getElementById('cameraPreview');
+
+    if (!cameraStream || !cameraPreview.videoWidth) {
+        showToast('Camera is not ready yet.');
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraPreview.videoWidth;
+    canvas.height = cameraPreview.videoHeight;
+    canvas.getContext('2d').drawImage(cameraPreview, 0, 0);
+
+    canvas.toBlob(function (blob) {
+        if (blob) {
+            handleImage(new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' }));
+            closeCamera();
+        } else {
+            showToast('Unable to capture an image.');
+        }
+    }, 'image/jpeg', 0.92);
+}
+
+function closeCamera() {
+    const cameraPanel = document.getElementById('cameraPanel');
+    const cameraPreview = document.getElementById('cameraPreview');
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(function (track) {
+            track.stop();
+        });
+        cameraStream = null;
+    }
+
+    cameraPreview.srcObject = null;
+    cameraPanel.classList.add('hidden');
+    cameraPanel.setAttribute('aria-hidden', 'true');
+}
 
 function handleImage(file) {
     if (!file.type.startsWith('image/')) {
@@ -223,6 +298,7 @@ function loadDashboardStats() {
 
 function resetScanner() {
     selectedImage = null;
+    closeCamera();
 
     const previewContainer = document.getElementById('previewContainer');
     const extractedSection = document.getElementById('extractedSection');

@@ -360,11 +360,46 @@
                 <button
                     id="cameraButton"
                     class="secondary-button"
+                    type="button"
                 >
 
                     📷 Use Camera
 
                 </button>
+
+
+                <div
+                    id="cameraPanel"
+                    class="camera-panel hidden"
+                    role="dialog"
+                    aria-labelledby="cameraTitle"
+                    aria-hidden="true"
+                >
+
+                    <h3 id="cameraTitle">Capture Product Image</h3>
+
+                    <video
+                        id="cameraPreview"
+                        autoplay
+                        playsinline
+                        muted
+                    ></video>
+
+                    <p id="cameraMessage" class="camera-message">
+                        Allow camera access to capture the product label.
+                    </p>
+
+                    <div class="camera-actions">
+                        <button id="captureButton" class="primary-button" type="button">
+                            Capture Image
+                        </button>
+
+                        <button id="closeCameraButton" class="secondary-button" type="button">
+                            Close Camera
+                        </button>
+                    </div>
+
+                </div>
 
 
                 <!-- IMAGE PREVIEW -->
@@ -711,7 +746,7 @@
 ></div>
 
 
-<script src="app.js"></script>
+<script src="js/app.js"></script>
 
 <script src="js/dashboard.js"></script>
 
