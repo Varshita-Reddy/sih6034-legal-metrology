@@ -1,0 +1,238 @@
+{
+  "success": true,
+  "action": "RETAKE",
+  "label": "📸 Retake Photo",
+  "reason": "1 required field(s) could not be extracted.",
+  "user_message": "Some required information could not be read. Please retake the photo and make sure the complete label is visible.",
+  "send_to_feature_engineering": false,
+  "feature_engineering": {
+    "send": false,
+    "image_path": null,
+    "product_name": null,
+    "product_name_data": null,
+    "fields": null,
+    "reason": "1 required field(s) could not be extracted."
+  },
+  "next_step": "REQUEST_RETAKE",
+  "frontend_instruction": "Ask the user to capture another photo.",
+  "image": {
+    "original_path": "C:\\Users\\premk\\Downloads\\SIH-OCR\\stage13\\incoming\\01_clean_normal.jpg",
+    "routed_path": null,
+    "routing_message": "Image does not exist."
+  },
+  "product_name": {
+    "field": "product_name",
+    "value": null,
+    "parsed": null,
+    "state": "missing",
+    "reliability": 0.0,
+    "note": "No explicit product-name label was detected. Product name was not inferred from arbitrary OCR text.",
+    "source_text": []
+  },
+  "ocr_quality": {
+    "avg_ocr_confidence": 0.9948,
+    "num_detections": 8,
+    "image_flagged_low_quality": true,
+    "image_quality_messages": [
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "verdict": "good",
+    "guidance": []
+  },
+  "quality": {
+    "is_low_quality": true,
+    "messages": [
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "blur_score": 3946.9316317460316,
+    "brightness": 237.75515238095238
+  },
+  "readability": {
+    "overall": "mostly_readable",
+    "fields_present": 4,
+    "fields_partial": 1,
+    "fields_uncertain": 0,
+    "fields_missing": 0,
+    "total_fields_checked": 5,
+    "required_fields": [
+      "mrp",
+      "net_quantity",
+      "manufacturing_date",
+      "best_before",
+      "manufacturer"
+    ],
+    "product_name_extracted": null
+  },
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": "50",
+      "parsed": {
+        "amount": 50.0,
+        "currency": "INR"
+      },
+      "state": "present",
+      "reliability": 0.996,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "MRP (incl. of all taxes): Rs 50"
+      ]
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": "100",
+      "parsed": {
+        "amount": 100.0,
+        "unit": "g"
+      },
+      "state": "present",
+      "reliability": 0.998,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Net Quantity: 100 g"
+      ]
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": "06/2026",
+      "parsed": {
+        "month": 6,
+        "year": 2026
+      },
+      "state": "present",
+      "reliability": 0.987,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Mfg. Date: 06/2026"
+      ]
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": "12 Months from Mfg",
+      "parsed": {
+        "amount": 12,
+        "unit": "months",
+        "reference": "manufacturing"
+      },
+      "state": "present",
+      "reliability": 1.0,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Best Before: 12 Months from Mfg."
+      ]
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": null,
+      "parsed": null,
+      "state": "partial",
+      "reliability": 0.649,
+      "note": "Field label found but no value could be read nearby (likely occluded, cropped, or too faint).",
+      "source_text": [
+        "Packed by: XYZ Foods Pvt. Ltd."
+      ]
+    },
+    "product_name": {
+      "field": "product_name",
+      "value": null,
+      "parsed": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "No explicit product-name label was detected. Product name was not inferred from arbitrary OCR text.",
+      "source_text": []
+    }
+  },
+  "validation": {
+    "mrp": {
+      "state": "valid",
+      "valid": true,
+      "message": "MRP value is valid.",
+      "reason": null,
+      "value": 50.0,
+      "currency": "INR"
+    },
+    "net_quantity": {
+      "state": "valid",
+      "valid": true,
+      "message": "Net quantity is valid.",
+      "reason": null,
+      "value": 100.0,
+      "unit": "g"
+    },
+    "manufacturing_date": {
+      "state": "valid",
+      "valid": true,
+      "message": "Manufacturing date is valid.",
+      "reason": null,
+      "month": 6,
+      "year": 2026
+    },
+    "best_before": {
+      "state": "valid",
+      "valid": true,
+      "message": "Best-before information is valid.",
+      "reason": null,
+      "value": 12.0,
+      "unit": "months",
+      "reference": "manufacturing"
+    },
+    "manufacturer": {
+      "state": "missing",
+      "valid": false,
+      "message": "Manufacturer information was not detected.",
+      "reason": "missing_value"
+    },
+    "summary": {
+      "overall": "needs_review",
+      "total_fields": 5,
+      "valid": 4,
+      "suspicious": 0,
+      "invalid": 0,
+      "missing": 1
+    }
+  },
+  "compliance": {
+    "decision": "non_compliant",
+    "label": "🔴 Non-compliant",
+    "reason": "The product label could not be considered compliant because 1 required field(s) are missing.",
+    "fields_required": 5,
+    "fields_present": 4,
+    "fields_valid": 4,
+    "fields_invalid": 0,
+    "fields_suspicious": 0,
+    "fields_missing": 1,
+    "field_summary": {
+      "mrp": {
+        "state": "valid",
+        "valid": true,
+        "message": "MRP value is valid.",
+        "reason": null
+      },
+      "net_quantity": {
+        "state": "valid",
+        "valid": true,
+        "message": "Net quantity is valid.",
+        "reason": null
+      },
+      "manufacturing_date": {
+        "state": "valid",
+        "valid": true,
+        "message": "Manufacturing date is valid.",
+        "reason": null
+      },
+      "best_before": {
+        "state": "valid",
+        "valid": true,
+        "message": "Best-before information is valid.",
+        "reason": null
+      },
+      "manufacturer": {
+        "state": "missing",
+        "valid": false,
+        "message": "Manufacturer information was not detected.",
+        "reason": "missing_value"
+      }
+    }
+  },
+  "preprocessing_attempt_used": "adaptive"
+}

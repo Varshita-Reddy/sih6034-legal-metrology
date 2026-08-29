@@ -1,0 +1,160 @@
+{
+  "image_path": "C:\\Users\\premk\\Downloads\\SIH-OCR\\images\\test_set\\02_dark.jpg",
+  "quality": {
+    "is_low_quality": false,
+    "messages": [],
+    "blur_score": 285.2083015873016,
+    "brightness": 65.29542857142857
+  },
+  "raw_text": "BRAND XYZ FOODS\nCrunchy Wheat Biscuits\nNet Quantity: 100 g\nMRP (incl. of all taxes): Rs 50\nMfg. Date: 06/2026\nBest Before: 12 Months from Mfg.\nPacked by: XYZ Foods Pvt. Ltd.\nCustomer Care: 1800-000-0000",
+  "detections": [
+    {
+      "text": "BRAND XYZ FOODS",
+      "confidence": 0.9954,
+      "bbox": [
+        51,
+        35,
+        567,
+        77
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Crunchy Wheat Biscuits",
+      "confidence": 1.0,
+      "bbox": [
+        50,
+        102,
+        479,
+        140
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Net Quantity: 100 g",
+      "confidence": 0.9985,
+      "bbox": [
+        47,
+        210,
+        405,
+        253
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "MRP (incl. of all taxes): Rs 50",
+      "confidence": 0.973,
+      "bbox": [
+        49,
+        282,
+        574,
+        319
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Mfg. Date: 06/2026",
+      "confidence": 0.9596,
+      "bbox": [
+        49,
+        351,
+        400,
+        390
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Best Before: 12 Months from Mfg.",
+      "confidence": 0.9999,
+      "bbox": [
+        47,
+        420,
+        655,
+        462
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Packed by: XYZ Foods Pvt. Ltd.",
+      "confidence": 0.9977,
+      "bbox": [
+        48,
+        490,
+        600,
+        530
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Customer Care: 1800-000-0000",
+      "confidence": 0.998,
+      "bbox": [
+        50,
+        562,
+        620,
+        597
+      ],
+      "was_corrected": false
+    }
+  ],
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": "50",
+      "state": "present",
+      "reliability": 0.987,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "MRP (incl. of all taxes): Rs 50"
+      ]
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": "100",
+      "state": "present",
+      "reliability": 0.999,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Net Quantity: 100 g"
+      ]
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": "06/2026",
+      "state": "present",
+      "reliability": 0.98,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Mfg. Date: 06/2026"
+      ]
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": "12 Months from Mfg",
+      "state": "present",
+      "reliability": 1.0,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Best Before: 12 Months from Mfg."
+      ]
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": "XYZ Foods Pvt. Ltd.",
+      "state": "present",
+      "reliability": 0.999,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Packed by: XYZ Foods Pvt. Ltd."
+      ]
+    }
+  },
+  "readability": {
+    "overall": "fully_readable",
+    "fields_present": 5,
+    "fields_partial": 0,
+    "fields_uncertain": 0,
+    "fields_missing": 0,
+    "total_fields_checked": 5
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "image_path": "images/test1.jpg",
+  "quality": {
+    "is_low_quality": false,
+    "messages": [],
+    "blur_score": 245.7,
+    "brightness": 142.3
+  },
+  "raw_text": "BRAND XYZ\nNET QUANTITY 100 g\nMRP ₹50\nMFG 06/2026\nBEST BEFORE 12 MONTHS",
+  "detections": [
+    {
+      "text": "BRAND XYZ",
+      "confidence": 0.99,
+      "bbox": [80, 60, 360, 100],
+      "was_corrected": false
+    },
+    {
+      "text": "NET QUANTITY 100 g",
+      "confidence": 0.96,
+      "bbox": [120, 300, 480, 340],
+      "was_corrected": true
+    },
+    {
+      "text": "MRP ₹50",
+      "confidence": 0.98,
+      "bbox": [120, 240, 420, 280],
+      "was_corrected": true
+    },
+    {
+      "text": "MFG 06/2026",
+      "confidence": 0.91,
+      "bbox": [100, 400, 380, 440],
+      "was_corrected": false
+    },
+    {
+      "text": "BEST BEFORE 12 MONTHS",
+      "confidence": 0.93,
+      "bbox": [100, 460, 500, 500],
+      "was_corrected": false
+    }
+  ]
+}

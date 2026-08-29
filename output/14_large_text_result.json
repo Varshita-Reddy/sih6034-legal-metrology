@@ -1,0 +1,101 @@
+{
+  "image_path": "C:\\Users\\premk\\Downloads\\SIH-OCR\\images\\test_set\\14_large_text.jpg",
+  "quality": {
+    "is_low_quality": true,
+    "messages": [
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "blur_score": 2683.2962888888887,
+    "brightness": 238.68053333333333
+  },
+  "raw_text": "PURE SUNFLOWER OIL\n1 Litre\nMRP: Rs 150",
+  "detections": [
+    {
+      "text": "PURE SUNFLOWER OIL",
+      "confidence": 0.9997,
+      "bbox": [
+        48,
+        53,
+        808,
+        110
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "1 Litre",
+      "confidence": 0.9999,
+      "bbox": [
+        47,
+        170,
+        233,
+        230
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "MRP: Rs 150",
+      "confidence": 0.9956,
+      "bbox": [
+        49,
+        293,
+        351,
+        341
+      ],
+      "was_corrected": false
+    }
+  ],
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": "150",
+      "state": "present",
+      "reliability": 0.998,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "MRP: Rs 150"
+      ]
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": "1",
+      "state": "uncertain",
+      "reliability": 0.7,
+      "note": "A matching value was found, but without its field label nearby — treat with caution.",
+      "source_text": [
+        "1 Litre"
+      ]
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    }
+  },
+  "readability": {
+    "overall": "partially_readable",
+    "fields_present": 1,
+    "fields_partial": 0,
+    "fields_uncertain": 1,
+    "fields_missing": 3,
+    "total_fields_checked": 5
+  }
+}

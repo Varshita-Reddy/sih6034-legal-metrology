@@ -1,0 +1,87 @@
+{
+  "image_path": "C:\\Users\\premk\\Downloads\\SIH-OCR\\images\\test_set\\06_very_blurry.jpg",
+  "quality": {
+    "is_low_quality": true,
+    "messages": [
+      "Image appears blurry. Hold the camera steady and refocus.",
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "blur_score": 3.7996613039455784,
+    "brightness": 237.6865253968254
+  },
+  "raw_text": "BRAND KYZ FOOOS\n",
+  "detections": [
+    {
+      "text": "BRAND KYZ FOOOS",
+      "confidence": 0.7007,
+      "bbox": [
+        50,
+        33,
+        586,
+        97
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "",
+      "confidence": 0.5257,
+      "bbox": [
+        47,
+        415,
+        670,
+        484
+      ],
+      "was_corrected": false
+    }
+  ],
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": null,
+      "state": "missing",
+      "reliability": 0.0,
+      "note": "Neither the field label nor a matching value was detected anywhere in this image.",
+      "source_text": []
+    }
+  },
+  "readability": {
+    "overall": "unreadable",
+    "fields_present": 0,
+    "fields_partial": 0,
+    "fields_uncertain": 0,
+    "fields_missing": 5,
+    "total_fields_checked": 5
+  }
+}

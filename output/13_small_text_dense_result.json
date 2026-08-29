@@ -1,0 +1,254 @@
+{
+  "image_path": "images/test_set/13_small_text_dense.jpg",
+  "quality": {
+    "is_low_quality": true,
+    "messages": [
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "blur_score": 5682.743780952381,
+    "brightness": 246.1999746031746
+  },
+  "ocr_quality": {
+    "avg_ocr_confidence": 0.9949,
+    "num_detections": 13,
+    "image_flagged_low_quality": true,
+    "image_quality_messages": [
+      "Image is overexposed. Reduce glare/flash and retake."
+    ],
+    "verdict": "good",
+    "guidance": []
+  },
+  "status": {
+    "ocr_status": "success",
+    "ocr_status_label": "🟢 Successfully extracted",
+    "readability_label": "🟢 Fully readable",
+    "needs_retake": false,
+    "retake_message": null,
+    "image_warning": "⚠️ Image is overexposed, but extracted data is reliable."
+  },
+  "preprocessing_attempt_used": "adaptive",
+  "raw_text": "MASALA SPICE MIX\nINGREDIENTS: Coriander, Cumin, Turmeric, Red Chilli,\nBlack Pepper, Cardamom, Cinnamon, Cloves, Bay Leaf,\nFennel, Mustard, Fenugreek, Asafoetida, Salt, Edible Oil.\nNutritional Info (per 100g): Energy 320kcal, Protein 12g,\nCarbohydrate 45g, Fat 8g, Sodium 1200mg, Fibre 20g.\nNet Weight: 50 g MRP: Rs 35 (Incl. of all taxes)\nMfg Date: 03/2026 Best Before: 9 months from Mfg.\nBatch No: MS20260304 FSSAI Lic No: 10018043002145\nManufactured & Packed by: Spice World Industries,\nPlot 14, Industrial Area, Kochi, Kerala - 682001.\nCustomer Care: care@spiceworld.in / 1800-111-2222\nStore in a cool, dry place away from direct sunlight.",
+  "detections": [
+    {
+      "text": "MASALA SPICE MIX",
+      "confidence": 0.9953,
+      "bbox": [
+        19,
+        14,
+        343,
+        40
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "INGREDIENTS: Coriander, Cumin, Turmeric, Red Chilli,",
+      "confidence": 0.9991,
+      "bbox": [
+        20,
+        61,
+        395,
+        75
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Black Pepper, Cardamom, Cinnamon, Cloves, Bay Leaf,",
+      "confidence": 0.9959,
+      "bbox": [
+        20,
+        86,
+        406,
+        99
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Fennel, Mustard, Fenugreek, Asafoetida, Salt, Edible Oil.",
+      "confidence": 0.9905,
+      "bbox": [
+        18,
+        107,
+        413,
+        125
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Nutritional Info (per 100g): Energy 320kcal, Protein 12g,",
+      "confidence": 0.9921,
+      "bbox": [
+        19,
+        133,
+        414,
+        150
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Carbohydrate 45g, Fat 8g, Sodium 1200mg, Fibre 20g.",
+      "confidence": 0.9971,
+      "bbox": [
+        19,
+        157,
+        402,
+        173
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Net Weight: 50 g MRP: Rs 35 (Incl. of all taxes)",
+      "confidence": 0.998,
+      "bbox": [
+        18,
+        179,
+        356,
+        197
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Mfg Date: 03/2026 Best Before: 9 months from Mfg.",
+      "confidence": 0.9919,
+      "bbox": [
+        20,
+        206,
+        392,
+        220
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Batch No: MS20260304 FSSAI Lic No: 10018043002145",
+      "confidence": 0.987,
+      "bbox": [
+        20,
+        229,
+        418,
+        243
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Manufactured & Packed by: Spice World Industries,",
+      "confidence": 0.9999,
+      "bbox": [
+        20,
+        254,
+        376,
+        268
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Plot 14, Industrial Area, Kochi, Kerala - 682001.",
+      "confidence": 0.9976,
+      "bbox": [
+        20,
+        278,
+        349,
+        291
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Customer Care: care@spiceworld.in / 1800-111-2222",
+      "confidence": 0.9897,
+      "bbox": [
+        18,
+        299,
+        392,
+        317
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Store in a cool, dry place away from direct sunlight.",
+      "confidence": 0.9999,
+      "bbox": [
+        20,
+        326,
+        382,
+        340
+      ],
+      "was_corrected": false
+    }
+  ],
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": "35",
+      "parsed": {
+        "amount": 35.0,
+        "currency": "INR"
+      },
+      "state": "present",
+      "reliability": 0.999,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Net Weight: 50 g MRP: Rs 35 (Incl. of all taxes)"
+      ]
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": "50",
+      "parsed": {
+        "amount": 50.0,
+        "unit": "g"
+      },
+      "state": "present",
+      "reliability": 0.999,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Net Weight: 50 g MRP: Rs 35 (Incl. of all taxes)"
+      ]
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": "03/2026",
+      "parsed": {
+        "month": 3,
+        "year": 2026
+      },
+      "state": "present",
+      "reliability": 0.996,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Mfg Date: 03/2026 Best Before: 9 months from Mfg."
+      ]
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": "9 months from Mfg",
+      "parsed": {
+        "amount": 9,
+        "unit": "months",
+        "reference": "manufacturing"
+      },
+      "state": "present",
+      "reliability": 0.996,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Mfg Date: 03/2026 Best Before: 9 months from Mfg."
+      ]
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": "Spice World Industries,",
+      "parsed": null,
+      "state": "present",
+      "reliability": 1.0,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Manufactured & Packed by: Spice World Industries,"
+      ]
+    }
+  },
+  "readability": {
+    "overall": "fully_readable",
+    "fields_present": 5,
+    "fields_partial": 0,
+    "fields_uncertain": 0,
+    "fields_missing": 0,
+    "total_fields_checked": 5
+  }
+}

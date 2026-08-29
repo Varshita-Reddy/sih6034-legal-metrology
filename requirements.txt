@@ -1,0 +1,10 @@
+# Core
+numpy>=1.24
+opencv-python>=4.8
+
+# OCR
+paddleocr>=2.7
+paddlepaddle>=2.5   # CPU build; swap for paddlepaddle-gpu if you have a CUDA GPU
+
+# Testing
+pytest>=7.4

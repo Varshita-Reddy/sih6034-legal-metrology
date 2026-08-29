@@ -1,0 +1,194 @@
+{
+  "image_path": "images/test_set/17_partial_occlusion.jpg",
+  "quality": {
+    "is_low_quality": false,
+    "messages": [],
+    "blur_score": 3762.238726984127,
+    "brightness": 231.6453380952381
+  },
+  "ocr_quality": {
+    "avg_ocr_confidence": 0.9951,
+    "num_detections": 8,
+    "image_flagged_low_quality": false,
+    "image_quality_messages": [],
+    "verdict": "good",
+    "guidance": []
+  },
+  "status": {
+    "ocr_status": "partial",
+    "ocr_status_label": "🟡 Partially extracted",
+    "readability_label": "🟡 Mostly readable",
+    "needs_retake": false,
+    "retake_message": null,
+    "image_warning": null
+  },
+  "preprocessing_attempt_used": "adaptive",
+  "raw_text": "BRAND XYZ FOODS\nCrunchy Wheat Biscuits\nNet Quantity: 100 g\n(es): Rs 50\nMfg. Date: 06/2026\nBest Before: 12 Months from M\nPacked by: XYZ Foods Pvt. Ltd.\nCustomer Care: 1800-000-0000",
+  "detections": [
+    {
+      "text": "BRAND XYZ FOODS",
+      "confidence": 0.9997,
+      "bbox": [
+        51,
+        35,
+        568,
+        77
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Crunchy Wheat Biscuits",
+      "confidence": 0.9998,
+      "bbox": [
+        50,
+        103,
+        479,
+        141
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Net Quantity: 100 g",
+      "confidence": 0.9991,
+      "bbox": [
+        47,
+        211,
+        404,
+        252
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "(es): Rs 50",
+      "confidence": 0.9876,
+      "bbox": [
+        387,
+        281,
+        576,
+        322
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Mfg. Date: 06/2026",
+      "confidence": 0.9899,
+      "bbox": [
+        49,
+        353,
+        400,
+        390
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Best Before: 12 Months from M",
+      "confidence": 0.9895,
+      "bbox": [
+        50,
+        424,
+        617,
+        458
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Packed by: XYZ Foods Pvt. Ltd.",
+      "confidence": 0.9966,
+      "bbox": [
+        49,
+        493,
+        601,
+        530
+      ],
+      "was_corrected": false
+    },
+    {
+      "text": "Customer Care: 1800-000-0000",
+      "confidence": 0.9987,
+      "bbox": [
+        49,
+        562,
+        620,
+        598
+      ],
+      "was_corrected": false
+    }
+  ],
+  "fields": {
+    "mrp": {
+      "field": "mrp",
+      "value": "50",
+      "parsed": {
+        "amount": 50.0,
+        "currency": "INR"
+      },
+      "state": "uncertain",
+      "reliability": 0.694,
+      "note": "A matching value was found, but without its field label nearby — treat with caution.",
+      "source_text": [
+        "(es): Rs 50"
+      ]
+    },
+    "net_quantity": {
+      "field": "net_quantity",
+      "value": "100",
+      "parsed": {
+        "amount": 100.0,
+        "unit": "g"
+      },
+      "state": "present",
+      "reliability": 1.0,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Net Quantity: 100 g"
+      ]
+    },
+    "manufacturing_date": {
+      "field": "manufacturing_date",
+      "value": "06/2026",
+      "parsed": {
+        "month": 6,
+        "year": 2026
+      },
+      "state": "present",
+      "reliability": 0.995,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Mfg. Date: 06/2026"
+      ]
+    },
+    "best_before": {
+      "field": "best_before",
+      "value": "12 Months",
+      "parsed": {
+        "amount": 12,
+        "unit": "months"
+      },
+      "state": "present",
+      "reliability": 0.995,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Best Before: 12 Months from M"
+      ]
+    },
+    "manufacturer": {
+      "field": "manufacturer",
+      "value": "XYZ Foods Pvt. Ltd.",
+      "parsed": null,
+      "state": "present",
+      "reliability": 0.998,
+      "note": "Keyword and value found together.",
+      "source_text": [
+        "Packed by: XYZ Foods Pvt. Ltd."
+      ]
+    }
+  },
+  "readability": {
+    "overall": "mostly_readable",
+    "fields_present": 4,
+    "fields_partial": 0,
+    "fields_uncertain": 1,
+    "fields_missing": 0,
+    "total_fields_checked": 5
+  }
+}
