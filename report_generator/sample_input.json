@@ -1,0 +1,20 @@
+{
+    "product": {
+        "product_name": "Soap",
+        "brand_name": "Test Soap",
+        "common_generic_name": "Bathing Soap",
+        "product_category": "Personal Care",
+        "product_subcategory": "Soap"
+    },
+    "status": "COMPLIANT",
+    "violations": [],
+    "checked_rules": [
+        "common_generic_name",
+        "manufacturer_name",
+        "manufacturer_address",
+        "net_quantity",
+        "manufacturing_date",
+        "mrp",
+        "consumer_care"
+    ]
+}
