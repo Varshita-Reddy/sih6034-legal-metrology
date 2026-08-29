@@ -282,7 +282,8 @@ function removeImage() {
    ANALYZE PRODUCT
 ========================================== */
 
-function analyzeProduct() {
+
+async function analyzeProduct() {
 
     if (!selectedImage) {
 
@@ -291,89 +292,86 @@ function analyzeProduct() {
         );
 
         return;
-
     }
-
 
     const progress =
         document.getElementById(
             "analysisProgress"
         );
 
-
     progress.classList.remove(
         "hidden"
     );
-
 
     const button =
         document.getElementById(
             "analyzeButton"
         );
 
+    button.disabled = true;
 
-    button.disabled =
-        true;
+    try {
 
+        const formData =
+            new FormData();
 
-    /*
-       THIS IS CURRENTLY A MOCK ANALYSIS.
+        formData.append(
+            "file",
+            selectedImage
+        );
 
-       Later replace this function with:
-
-       fetch("/api/analyze", {
-           method: "POST",
-           body: formData
-       })
-
-       The backend can then use:
-       OCR + AI + Legal Metrology rules.
-    */
-
-
-    setTimeout(
-        function () {
-
-            const result =
-                generateMockAnalysis();
-
-
-            displayAnalysis(
-                result
+        const response =
+            await fetch(
+                "http://10.145.22.55:8000/scan",
+                {
+                    method: "POST",
+                    body: formData
+                }
             );
 
-
-            progress.classList.add(
-                "hidden"
+        if (!response.ok) {
+            throw new Error(
+                "Backend request failed"
             );
+        }
 
+        const result =
+            await response.json();
 
-            document
-                .getElementById(
-                    "extractedSection"
-                )
-                .classList.remove(
-                    "hidden"
-                );
+        console.log(
+            "Backend response:",
+            result
+        );
 
+        showToast(
+            "Image sent to backend successfully!"
+        );
 
-            document
-                .getElementById(
-                    "extractedSection"
-                )
-                .scrollIntoView({
-                    behavior:
-                        "smooth"
-                });
+        progress.classList.add(
+            "hidden"
+        );
 
+        button.disabled = false;
 
-        },
-        1800
-    );
+    } catch (error) {
 
+        console.error(
+            "Backend connection error:",
+            error
+        );
+
+        showToast(
+            "Could not connect to backend."
+        );
+
+        progress.classList.add(
+            "hidden"
+        );
+
+        button.disabled = false;
+    }
 }
-
-
+  
 /* ==========================================
    MOCK OCR / AI RESULT
 ========================================== */
