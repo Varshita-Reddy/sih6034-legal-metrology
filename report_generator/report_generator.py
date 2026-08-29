@@ -164,35 +164,35 @@ def generate_report(data):
         [
             Paragraph(
                 f"<b>Product Name:</b> "
-                f"{escape(str(product['product_name']))}",
+                f"{escape(str(product["product_name"]))}",
                 product_style
             )
         ],
         [
             Paragraph(
                 f"<b>Brand Name:</b> "
-                f"{escape(str(product['brand_name']))}",
+                f"{escape(str(product["brand_name"]))}",
                 product_style
             )
         ],
         [
             Paragraph(
                 f"<b>Common/Generic Name:</b> "
-                f"{escape(str(product['common_generic_name']))}",
+                f"{escape(str(product["common_generic_name"]))}",
                 product_style
             )
         ],
         [
             Paragraph(
                 f"<b>Product Category:</b> "
-                f"{escape(str(product['product_category']))}",
+                f"{escape(str(product["product_category"]))}",
                 product_style
             )
         ],
         [
             Paragraph(
                 f"<b>Product Subcategory:</b> "
-                f"{escape(str(product['product_subcategory']))}",
+                f"{escape(str(product["product_subcategory"]))}",
                 product_style
             )
         ]
@@ -235,11 +235,11 @@ def generate_report(data):
     if status == "COMPLIANT":
         status_text = "COMPLIANT"
         status_color = colors.green
-        status_symbol = "✓"
+        status_symbol = "[OK]"
     else:
         status_text = "NON_COMPLIANT"
         status_color = colors.red
-        status_symbol = "✗"
+        status_symbol = "[X]"
 
     status_content = [
         [
@@ -292,7 +292,7 @@ def generate_report(data):
             message = escape(str(violation.get("message", "")))
 
             violation_text = (
-                f"<font color='red' size='12'>✗</font> "
+                f"<font color='red' size='12'>[X]</font> "
                 f"<b>{field}:</b> "
                 f"{message}"
             )
@@ -331,7 +331,7 @@ def generate_report(data):
 
         story.append(
             Paragraph(
-                "<font color='green' size='12'>✓</font> "
+                "<font color='green' size='12'>[OK]</font> "
                 "<b>Product is compliant.</b>",
                 normal_style
             )
@@ -382,11 +382,11 @@ def generate_report(data):
         )
 
         if rule_failed:
-            status_symbol = "✗"
+            status_symbol = "[X]"
             status_text = "FAILED"
             status_color = colors.red
         else:
-            status_symbol = "✓"
+            status_symbol = "[OK]"
             status_text = "PASSED"
             status_color = colors.green
 
