@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     loadDashboardStats();
+    restoreRetakeInspection();
 
     const input = document.getElementById('productImage');
     const uploadArea = document.getElementById('uploadArea');
@@ -240,6 +241,7 @@ function displayAnalysis(result) {
 
     const list = document.getElementById('violationsList');
     list.innerHTML = '';
+    window.lastGeneratedViolations = Array.isArray(result.violations) ? result.violations.slice() : [];
 
     if (result.violations.length === 0) {
         list.innerHTML = '<div class="violation" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;">✓ No issues detected.</div>';
@@ -252,6 +254,29 @@ function displayAnalysis(result) {
         div.textContent = '⚠ ' + item;
         list.appendChild(div);
     });
+}
+
+function generateInspectionReport(result) {
+    const lines = [
+        'LegalMetrix Inspection Report',
+        '===========================',
+        'Product Name: ' + (result.productName || 'N/A'),
+        'Manufacturer: ' + (result.manufacturer || 'N/A'),
+        'MRP: ' + (result.mrp || 'N/A'),
+        'Net Quantity: ' + (result.netQuantity || 'N/A'),
+        'Manufacturing Date: ' + (result.manufacturingDate || 'N/A'),
+        'Best Before: ' + (result.bestBefore || 'N/A'),
+        'Consumer Care: ' + (result.consumerCare || 'N/A'),
+        'Country of Origin: ' + (result.countryOrigin || 'N/A'),
+        'Category: ' + (result.category || 'N/A'),
+        'Compliance Score: ' + (result.score || '0%'),
+        'Status: ' + (result.status || 'WARNING'),
+        '',
+        'Detected Issues:',
+        (Array.isArray(result.violations) && result.violations.length ? result.violations.join('\n') : 'No issues detected.')
+    ];
+
+    return lines.join('\n');
 }
 
 function saveCurrentInspection() {
@@ -270,6 +295,20 @@ function saveCurrentInspection() {
         status: document.getElementById('overallStatus').textContent,
         category: document.getElementById('productCategory')?.value || 'Food / Grocery',
         image,
+        report: generateInspectionReport({
+            productName: document.getElementById('productName').textContent,
+            manufacturer: document.getElementById('manufacturer').textContent,
+            mrp: document.getElementById('mrp').textContent,
+            netQuantity: document.getElementById('netQuantity').textContent,
+            manufacturingDate: document.getElementById('manufacturingDate').textContent,
+            bestBefore: document.getElementById('bestBefore').textContent,
+            consumerCare: document.getElementById('consumerCare').textContent,
+            countryOrigin: document.getElementById('countryOrigin').textContent,
+            score: document.getElementById('complianceScore').textContent,
+            status: document.getElementById('overallStatus').textContent,
+            category: document.getElementById('productCategory')?.value || 'Food / Grocery',
+            violations: Array.isArray(window.lastGeneratedViolations) ? window.lastGeneratedViolations : []
+        }),
         date: new Date().toISOString()
     };
 
@@ -294,6 +333,36 @@ function loadDashboardStats() {
     if (compliantCount) compliantCount.textContent = compliant;
     if (violationCount) violationCount.textContent = violations;
     if (complianceRate) complianceRate.textContent = rate + '%';
+}
+
+function restoreRetakeInspection() {
+    const savedData = localStorage.getItem('legalMetrixRetakeInspection');
+    if (!savedData) return;
+
+    try {
+        const inspection = JSON.parse(savedData);
+        if (!inspection || !inspection.image) return;
+
+        const previewImage = document.getElementById('previewImage');
+        const previewContainer = document.getElementById('previewContainer');
+        const selectedFileName = document.getElementById('selectedFileName');
+        const analyzeButton = document.getElementById('analyzeButton');
+
+        if (previewImage) {
+            previewImage.src = inspection.image;
+            previewImage.dataset.image = inspection.image;
+        }
+
+        if (previewContainer) previewContainer.classList.remove('hidden');
+        if (selectedFileName) selectedFileName.textContent = inspection.productName || 'Retake photo';
+        if (analyzeButton) analyzeButton.disabled = false;
+
+        selectedImage = inspection.image;
+        localStorage.removeItem('legalMetrixRetakeInspection');
+        showToast('Previous inspection image loaded for retake.');
+    } catch (error) {
+        localStorage.removeItem('legalMetrixRetakeInspection');
+    }
 }
 
 function resetScanner() {

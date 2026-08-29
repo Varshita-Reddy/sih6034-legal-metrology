@@ -1,7 +1,39 @@
+function getCurrentOfficerName() {
+    const storedName = localStorage.getItem('legalMetrixOfficerName');
+    const cleanedName = (storedName || 'Officer').trim();
+    return cleanedName || 'Officer';
+}
+
+function getOfficerHistoryKey() {
+    const name = getCurrentOfficerName();
+    const safeName = name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'officer';
+
+    return 'legalMetrixInspections_' + safeName;
+}
+
 function getInspections() {
     try {
-        const data = localStorage.getItem('legalMetrixInspections');
-        return data ? JSON.parse(data) : [];
+        const key = getOfficerHistoryKey();
+        const data = localStorage.getItem(key);
+
+        if (data) {
+            const parsed = JSON.parse(data);
+            return Array.isArray(parsed) ? parsed : [];
+        }
+
+        const legacyData = localStorage.getItem('legalMetrixInspections');
+        if (legacyData) {
+            const parsed = JSON.parse(legacyData);
+            if (Array.isArray(parsed)) {
+                localStorage.setItem(key, JSON.stringify(parsed));
+                return parsed;
+            }
+        }
+
+        return [];
     } catch (error) {
         return [];
     }
@@ -9,7 +41,14 @@ function getInspections() {
 
 function saveInspection(result) {
     const inspections = getInspections();
-    inspections.push(result);
+    const officerName = getCurrentOfficerName();
+    const inspection = {
+        ...result,
+        officerName: officerName
+    };
+
+    inspections.push(inspection);
+    localStorage.setItem(getOfficerHistoryKey(), JSON.stringify(inspections));
     localStorage.setItem('legalMetrixInspections', JSON.stringify(inspections));
 }
 

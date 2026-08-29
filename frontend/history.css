@@ -45,6 +45,51 @@ th {
     font-weight: 700;
 }
 
+.history-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 38px;
+    min-width: 78px;
+}
+
+.action-button:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+}
+
+.view-button {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.download-button {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #047857;
+}
+
+.retake-button {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #c2410c;
+}
+
 .status-pill {
     display: inline-block;
     padding: 6px 10px;
