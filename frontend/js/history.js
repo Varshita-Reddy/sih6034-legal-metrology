@@ -86,6 +86,21 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = 'index.html';
     }
 
+    function deleteInspection(item) {
+        const allInspections = getInspections();
+        const filtered = allInspections.filter(entry => {
+            if (item && item.id && entry.id) {
+                return entry.id !== item.id;
+            }
+            return JSON.stringify(entry) !== JSON.stringify(item);
+        });
+
+        localStorage.setItem(getOfficerHistoryKey(), JSON.stringify(filtered));
+        localStorage.setItem('legalMetrixInspections', JSON.stringify(filtered));
+        renderHistory();
+        showToast('Inspection deleted.');
+    }
+
     function renderHistory() {
         const inspections = getInspections();
         const searchValue = (searchInput?.value || '').trim().toLowerCase();
@@ -163,9 +178,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 retakeInspection(item);
             });
 
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'action-button delete-button';
+            deleteButton.title = 'Delete inspection';
+            deleteButton.setAttribute('aria-label', 'Delete inspection');
+            deleteButton.textContent = '🗑';
+            deleteButton.addEventListener('click', function () {
+                deleteInspection(item);
+            });
+
             actionsWrap.appendChild(viewButton);
             actionsWrap.appendChild(downloadButton);
             actionsWrap.appendChild(retakeButton);
+            actionsWrap.appendChild(deleteButton);
             actionsCell.appendChild(actionsWrap);
 
             row.appendChild(productCell);

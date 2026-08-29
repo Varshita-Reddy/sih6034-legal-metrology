@@ -90,6 +90,21 @@ th {
     color: #c2410c;
 }
 
+.delete-button {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+    min-width: 42px;
+    padding: 9px 10px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.delete-button:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
 .status-pill {
     display: inline-block;
     padding: 6px 10px;
