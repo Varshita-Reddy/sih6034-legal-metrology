@@ -2,26 +2,19 @@ from report_generator import generate_report
 import os
 
 
-# This represents the result that Mani's Rules Engine
-# will eventually send to the Report Generator.
-
-mani_result = {
+compliance_result = {
     "product": {
-        "product_name": "Test Product",
-        "brand_name": "Test Brand",
-        "common_generic_name": "Test Item",
+        "product_name": "",
+        "brand_name": "",
+        "common_generic_name": "Potato Chips",
         "product_category": "Food",
         "product_subcategory": "Snacks"
     },
     "status": "NON_COMPLIANT",
     "violations": [
         {
-            "field": "mrp",
-            "message": "Retail sale price / MRP is missing"
-        },
-        {
-            "field": "net_quantity",
-            "message": "Net quantity is missing"
+            "field": "expiry_date",
+            "message": "Best before / use by / expiry date (FSSAI labeling regulations — not Legal Metrology) is missing"
         }
     ],
     "checked_rules": [
@@ -31,22 +24,21 @@ mani_result = {
         "net_quantity",
         "manufacturing_date",
         "mrp",
-        "consumer_care"
+        "consumer_care",
+        "country_of_origin",
+        "expiry_date"
     ]
 }
 
 
-print("Starting integration test...")
+print("Testing Mani's actual compliance result...")
 print()
 
-# Call the Report Generator exactly like
-# another module will call it.
-pdf_file = generate_report(mani_result)
+pdf_file = generate_report(compliance_result)
 
 print()
 print("Returned PDF:", pdf_file)
 
-# Check whether the PDF was actually created.
 if os.path.exists(pdf_file):
     print("PDF file exists: YES")
 else:
