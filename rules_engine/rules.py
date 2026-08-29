@@ -34,12 +34,14 @@ COMMON_RULES = {
     "consumer_care": {
         "required": True,
         "description": "Consumer complaint contact details"
-      },
-            "country_of_origin": {
+    },
+
+    "country_of_origin": {
         "required": True,
         "description": "Country of origin (Legal Metrology Amendment Rules, 2017)"
     }
 }
+
 # --- FSSAI (Food Safety and Standards) labeling requirement — separate law, food only ---
 FSSAI_RULES = {
     "expiry_date": {
@@ -58,9 +60,9 @@ CATEGORY_RULES = {
             "net_quantity",
             "manufacturing_date",
             "mrp",
-            "consumer_care"
-            "Country of origin",
-            "expiry date",
+            "consumer_care",
+            "country_of_origin",
+            "expiry_date",
         ],
         "Confectionery": [
             "common_generic_name",
@@ -71,8 +73,8 @@ CATEGORY_RULES = {
             "mrp",
             "consumer_care",
             "country_of_origin",
-            "expiry_date"
-        ]
+            "expiry_date",
+        ],
     },
 
     "Personal Care": {
@@ -86,6 +88,6 @@ CATEGORY_RULES = {
             
             "consumer_care",
             "country_of_origin",
-        ]
+        ],
     }
 }
