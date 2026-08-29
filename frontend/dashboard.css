@@ -1,149 +1,3 @@
-/* ================= WELCOME ================= */
-
-.welcome-card {
-
-    background:
-        white;
-
-    border-radius: 12px;
-
-    padding: 25px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-.welcome-card h2 {
-
-    font-size: 20px;
-
-    margin-bottom: 7px;
-
-}
-
-.welcome-card p {
-
-    color: var(--muted);
-
-    font-size: 13px;
-
-}
-
-
-/* ================= STATS ================= */
-
-.stats {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 18px;
-
-    margin-bottom: 25px;
-
-}
-
-.stat-card {
-
-    background: white;
-
-    padding: 20px;
-
-    border-radius: 12px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-.stat-icon {
-
-    width: 48px;
-
-    height: 48px;
-
-    border-radius: 10px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-weight: bold;
-
-    font-size: 20px;
-
-}
-
-.stat-icon.blue {
-
-    background: #dbeafe;
-
-    color: #2563eb;
-
-}
-
-.stat-icon.green {
-
-    background: #dcfce7;
-
-    color: #16a34a;
-
-}
-
-.stat-icon.red {
-
-    background: #fee2e2;
-
-    color: #dc2626;
-
-}
-
-.stat-icon.orange {
-
-    background: #ffedd5;
-
-    color: #d97706;
-
-}
-
-.stat-card span {
-
-    color: var(--muted);
-
-    font-size: 12px;
-
-}
-
-.stat-card strong {
-
-    display: block;
-
-    font-size: 25px;
-
-    margin-top: 5px;
-
-}
-
-
 /* ================= SCANNER ================= */
 
 .scanner-section {
@@ -154,7 +8,7 @@
 
 .section-title {
 
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 
     display: flex;
 
@@ -166,7 +20,15 @@
 
 .section-title h2 {
 
-    font-size: 19px;
+    font-size: 31px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.04em;
+
+    font-weight: 800;
+
+    color: var(--text);
 
 }
 
@@ -174,64 +36,99 @@
 
     color: var(--muted);
 
-    font-size: 13px;
+    font-size: 15px;
 
-    margin-top: 4px;
+    margin-top: 6px;
+
+    max-width: 700px;
 
 }
 
 .scanner-card {
 
-    background: white;
+    background: rgba(255,255,255,0.7);
 
-    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
 
-    padding: 25px;
+    border-radius: 18px;
 
-    box-shadow:
-        var(--shadow);
+    padding: 24px;
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(8px);
+
+}
+
+.upload-actions {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+    align-items: stretch;
 
 }
 
 .upload-area {
 
-    border:
-        2px dashed #cbd5e1;
+    border: 1.5px solid rgba(148, 163, 184, 0.22);
 
-    border-radius: 12px;
+    border-radius: 16px;
 
-    padding: 45px 20px;
+    padding: 20px 16px;
 
     text-align: center;
 
-    background:
-        #f8fafc;
+    background: linear-gradient(180deg, rgba(248,250,252,0.95), rgba(239,246,255,0.9));
 
-    transition: .2s;
+    transition: all 0.25s ease;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 220px;
+
+    aspect-ratio: 1 / 1;
+
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 14px 24px rgba(148,163,184,0.08);
 
 }
 
 .upload-area.dragging {
 
-    border-color:
-        var(--primary);
+    border-color: rgba(37, 99, 235, 0.6);
 
-    background:
-        #eff6ff;
+    background: linear-gradient(180deg, #edf6ff, #eaf2ff);
+
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.08), 0 18px 30px rgba(59,130,246,0.1);
 
 }
 
 .upload-icon {
 
-    font-size: 45px;
+    font-size: 42px;
 
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+
+    filter: drop-shadow(0 10px 18px rgba(59,130,246,0.15));
 
 }
 
 .upload-area h3 {
 
-    margin-bottom: 7px;
+    margin-bottom: 8px;
+
+    font-size: 20px;
+
+    letter-spacing: -0.02em;
 
 }
 
@@ -243,25 +140,41 @@
 
     margin-bottom: 18px;
 
+    line-height: 1.5;
+
 }
 
 .upload-button {
 
-    display: inline-block;
+    display: inline-flex;
 
-    background:
-        var(--primary);
+    align-items: center;
+
+    justify-content: center;
+
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
 
     color: white;
 
-    padding:
-        12px 20px;
+    padding: 12px 18px;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     cursor: pointer;
 
-    font-weight: 600;
+    font-weight: 700;
+
+    box-shadow: 0 10px 24px rgba(37,99,235,0.28);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+}
+
+.upload-button:hover {
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 14px 28px rgba(37,99,235,0.34);
 
 }
 
@@ -273,7 +186,9 @@
 
     font-size: 11px;
 
-    margin-top: 12px;
+    margin-top: 14px;
+
+    letter-spacing: 0.01em;
 
 }
 
@@ -282,7 +197,96 @@
 
 #cameraButton {
 
-    margin-top: 15px;
+    margin-top: 0;
+
+}
+
+.camera-button {
+
+    margin-top: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    width: 100%;
+
+    min-height: 220px;
+
+    aspect-ratio: 1 / 1;
+
+    border: 1.5px solid rgba(148, 163, 184, 0.22);
+
+    border-radius: 16px;
+
+    background: linear-gradient(180deg, rgba(248,250,252,0.95), rgba(232,244,255,0.92));
+
+    color: var(--text);
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    padding: 22px 16px;
+
+    text-align: center;
+
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 14px 24px rgba(148,163,184,0.08);
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.camera-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 18px;
+
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, rgba(148,163,184,0.15), rgba(59,130,246,0.06));
+
+    border: 1px solid rgba(148,163,184,0.2);
+
+    box-shadow: inset 0 0 0 7px rgba(255,255,255,0.35);
+
+}
+
+.camera-button::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 30px;
+
+    background-image: linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px);
+
+    background-size: 18px 18px;
+
+    border-radius: 12px;
+
+    opacity: 0.65;
+
+}
+
+.camera-button span,
+.camera-button .camera-inline {
+
+    position: relative;
+
+    z-index: 1;
 
 }
 

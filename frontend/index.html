@@ -32,23 +32,6 @@
 
     <aside class="sidebar">
 
-        <div class="brand">
-
-            <div class="brand-logo">
-                LM
-            </div>
-
-            <div>
-                <h2>LegalMetrix</h2>
-
-                <span>
-                    Compliance System
-                </span>
-            </div>
-
-        </div>
-
-
         <nav class="navigation">
 
             <a
@@ -116,18 +99,13 @@
 
         <header class="topbar">
 
-            <div>
+            <div class="topbar-brand">
 
-                <h1>
-                    Dashboard
-                </h1>
-
-                <p>
-                    Packaged Commodity Compliance Inspection
-                </p>
+                <div class="brand-mark">
+                    LM
+                </div>
 
             </div>
-
 
             <div class="officer">
 
@@ -135,148 +113,20 @@
                     class="officer-avatar"
                     id="officerAvatar"
                 >
-                    O
+                    U
                 </div>
 
                 <div>
 
                     <strong id="officerName">
-                        Officer
+                        User
                     </strong>
-
-                    <small>
-                        Enforcement Officer
-                    </small>
 
                 </div>
 
             </div>
 
         </header>
-
-
-        <!-- ================= WELCOME ================= -->
-
-        <section class="welcome-card">
-
-            <div>
-
-                <h2>
-                    Welcome back,
-                    <span id="welcomeName">
-                        Officer
-                    </span>
-                    👋
-                </h2>
-
-                <p>
-                    Scan packaged commodities and
-                    check their Legal Metrology declarations.
-                </p>
-
-            </div>
-
-
-            <button
-                class="primary-button"
-                onclick="scrollToScanner()"
-            >
-
-                + Scan Product
-
-            </button>
-
-        </section>
-
-
-        <!-- ================= STATISTICS ================= -->
-
-        <section class="stats">
-
-            <div class="stat-card">
-
-                <div class="stat-icon blue">
-                    ◉
-                </div>
-
-                <div>
-
-                    <span>
-                        Products Scanned
-                    </span>
-
-                    <strong id="totalScans">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon green">
-                    ✓
-                </div>
-
-                <div>
-
-                    <span>
-                        Compliant
-                    </span>
-
-                    <strong id="compliantCount">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon red">
-                    !
-                </div>
-
-                <div>
-
-                    <span>
-                        Violations
-                    </span>
-
-                    <strong id="violationCount">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon orange">
-                    %
-                </div>
-
-                <div>
-
-                    <span>
-                        Compliance Rate
-                    </span>
-
-                    <strong id="complianceRate">
-                        0%
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
 
 
         <!-- ================= SCANNER ================= -->
@@ -306,66 +156,69 @@
 
             <div class="scanner-card">
 
+                <div class="upload-actions">
 
-                <!-- UPLOAD AREA -->
+                    <!-- UPLOAD AREA -->
 
-                <div
-                    id="uploadArea"
-                    class="upload-area"
-                >
+                    <div
+                        id="uploadArea"
+                        class="upload-area"
+                    >
 
-                    <div class="upload-icon">
-                        📷
+                        <div class="upload-icon">
+                            📷
+                        </div>
+
+
+                        <h3>
+                            Upload Product Image
+                        </h3>
+
+
+                        <p>
+                            Upload a clear image of the
+                            product packaging or label.
+                        </p>
+
+
+                        <label
+                            for="productImage"
+                            class="upload-button"
+                        >
+
+                            Choose Image
+
+                        </label>
+
+
+                        <input
+                            type="file"
+                            id="productImage"
+                            accept="image/png,image/jpeg,image/jpg"
+                            hidden
+                        >
+
+
+                        <span class="file-info">
+                            JPG, JPEG or PNG • Maximum 10 MB
+                        </span>
+
                     </div>
 
 
-                    <h3>
-                        Upload Product Image
-                    </h3>
+                    <!-- CAMERA -->
 
-
-                    <p>
-                        Upload a clear image of the
-                        product packaging or label.
-                    </p>
-
-
-                    <label
-                        for="productImage"
-                        class="upload-button"
+                    <button
+                        id="cameraButton"
+                        class="secondary-button camera-button"
+                        type="button"
                     >
 
-                        Choose Image
+                        📷 Use Camera
 
-                    </label>
-
-
-                    <input
-                        type="file"
-                        id="productImage"
-                        accept="image/png,image/jpeg,image/jpg"
-                        hidden
-                    >
-
-
-                    <span class="file-info">
-                        JPG, JPEG or PNG • Maximum 10 MB
-                    </span>
+                    </button>
 
                 </div>
-
-
-                <!-- CAMERA -->
-
-                <button
-                    id="cameraButton"
-                    class="secondary-button"
-                    type="button"
-                >
-
-                    📷 Use Camera
-
-                </button>
 
 
                 <div
@@ -488,7 +341,7 @@
                     disabled
                 >
 
-                    Analyze Product
+                    Inspect Product
 
                 </button>
 
@@ -727,6 +580,55 @@
                     Save Inspection
 
                 </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LEGAL METROLOGY RULES ================= -->
+
+        <section class="rules-section">
+
+            <div class="rules-card">
+
+                <div class="rules-icon">
+                    ⚖️
+                </div>
+
+                <div class="rules-content">
+
+                    <h2>
+                        Legal Metrology Rules, 2011
+                    </h2>
+
+                    <p>
+                        Reference document for checking packaged
+                        commodity declarations and compliance requirements.
+                    </p>
+
+                    <div class="rules-actions">
+
+                        <a
+                            href="assets/legal_metrology_rules_2011.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rules-view-button"
+                        >
+                            📖 View Rules
+                        </a>
+
+                        <a
+                            href="assets/legal_metrology_rules_2011.pdf"
+                            download="Legal_Metrology_Packaged_Commodities_Rules_2011.pdf"
+                            class="rules-download-button"
+                        >
+                            ⬇ Download PDF
+                        </a>
+
+                    </div>
+
+                </div>
 
             </div>
 

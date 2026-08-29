@@ -4,10 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const officerAvatar = document.getElementById('officerAvatar');
 
     if (officerName) {
-        const stored = localStorage.getItem('legalMetrixOfficerName') || 'Officer';
-        officerName.textContent = stored;
-        if (welcomeName) welcomeName.textContent = stored;
-        if (officerAvatar) officerAvatar.textContent = stored.charAt(0).toUpperCase();
+        const stored = localStorage.getItem('legalMetrixOfficerName');
+        const displayName = stored && stored.trim() ? stored.trim() : 'User';
+        officerName.textContent = displayName;
+        if (welcomeName) welcomeName.textContent = displayName;
+        if (officerAvatar) officerAvatar.textContent = displayName.charAt(0).toUpperCase();
     }
 
     loadDashboardStats();

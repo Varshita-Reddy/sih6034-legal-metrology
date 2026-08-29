@@ -10,17 +10,21 @@
 
     --primary-dark: #1d4ed8;
 
-    --background: #f5f7fb;
+    --primary-soft: #eaf2ff;
+
+    --background: #f3f7ff;
 
     --white: #ffffff;
 
-    --dark: #111827;
+    --dark: #0f172a;
 
-    --text: #1f2937;
+    --dark-soft: #111c31;
 
-    --muted: #6b7280;
+    --text: #0f172a;
 
-    --border: #e5e7eb;
+    --muted: #64748b;
+
+    --border: rgba(148, 163, 184, 0.22);
 
     --green: #16a34a;
 
@@ -29,19 +33,23 @@
     --orange: #d97706;
 
     --shadow:
-        0 4px 20px rgba(0,0,0,.05);
+        0 16px 36px rgba(15, 23, 42, 0.08);
+
+    --glow:
+        0 0 0 1px rgba(96, 165, 250, 0.35), 0 16px 30px rgba(37, 99, 235, 0.18);
 
 }
 
 body {
 
     font-family:
+        Inter,
+        "Segoe UI",
         Arial,
-        Helvetica,
         sans-serif;
 
     background:
-        var(--background);
+        linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
 
     color:
         var(--text);
@@ -88,15 +96,19 @@ a {
     width: 250px;
 
     background:
-        var(--dark);
+        linear-gradient(180deg, #0b1220 0%, #101b2d 100%);
 
     color: white;
 
-    padding: 25px 15px;
+    padding: 22px 16px 18px;
 
     display: flex;
 
     flex-direction: column;
+
+    border-right: 1px solid rgba(148, 163, 184, 0.12);
+
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.04);
 
 }
 
@@ -154,17 +166,19 @@ a {
 
     flex-direction: column;
 
-    gap: 5px;
+    gap: 8px;
+
+    margin-top: 18px;
 
 }
 
 .nav-item {
 
-    padding: 13px;
+    padding: 13px 14px;
 
-    border-radius: 8px;
+    border-radius: 12px;
 
-    color: #9ca3af;
+    color: #c4d0e4;
 
     text-decoration: none;
 
@@ -176,11 +190,15 @@ a {
 
     font-size: 14px;
 
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+
 }
 
 .nav-item:hover {
 
-    background: #1f2937;
+    background: rgba(148, 163, 184, 0.08);
 
     color: white;
 
@@ -188,16 +206,31 @@ a {
 
 .nav-item.active {
 
-    background:
-        var(--primary);
+    background: linear-gradient(135deg, rgba(37,99,235,0.22), rgba(59,130,246,0.14));
 
     color: white;
+
+    box-shadow: var(--glow);
+
+}
+
+.nav-item span {
+
+    display: inline-flex;
+
+    width: 18px;
+
+    justify-content: center;
+
+    opacity: 0.95;
 
 }
 
 .sidebar-bottom {
 
     margin-top: auto;
+
+    padding-top: 16px;
 
 }
 
@@ -207,11 +240,11 @@ a {
 
     background: transparent;
 
-    border: none;
+    border: 1px solid rgba(148, 163, 184, 0.18);
 
-    color: #9ca3af;
+    color: #d7e2f7;
 
-    padding: 13px;
+    padding: 12px 14px;
 
     text-align: left;
 
@@ -221,11 +254,19 @@ a {
 
     font-size: 14px;
 
+    border-radius: 12px;
+
+    transition: all 0.2s ease;
+
 }
 
 .logout-button:hover {
 
     color: white;
+
+    border-color: rgba(148, 163, 184, 0.34);
+
+    background: rgba(148, 163, 184, 0.05);
 
 }
 
@@ -236,7 +277,7 @@ a {
 
     margin-left: 250px;
 
-    padding: 30px 40px;
+    padding: 26px 36px 36px;
 
     min-height: 100vh;
 
@@ -253,23 +294,55 @@ a {
 
     justify-content: space-between;
 
-    margin-bottom: 25px;
+    margin-bottom: 18px;
+
+    background: rgba(255,255,255,0.62);
+
+    border: 1px solid rgba(148, 163, 184, 0.15);
+
+    border-radius: 18px;
+
+    padding: 12px 18px;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 
 }
 
-.topbar h1 {
+.topbar-brand {
 
-    font-size: 28px;
+    display: flex;
+
+    align-items: center;
 
 }
 
-.topbar p {
+.brand-mark {
 
-    color: var(--muted);
+    width: 40px;
 
-    margin-top: 5px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    background: linear-gradient(135deg, #1d4ed8, #60a5fa);
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     font-size: 14px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.26);
 
 }
 
@@ -285,14 +358,13 @@ a {
 
 .officer-avatar {
 
-    width: 42px;
+    width: 40px;
 
-    height: 42px;
+    height: 40px;
 
     border-radius: 50%;
 
-    background:
-        var(--primary);
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
 
     color: white;
 
@@ -303,6 +375,16 @@ a {
     justify-content: center;
 
     font-weight: 700;
+
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.35);
+
+}
+
+.officer strong {
+
+    font-size: 14px;
+
+    letter-spacing: 0.02em;
 
 }
 
