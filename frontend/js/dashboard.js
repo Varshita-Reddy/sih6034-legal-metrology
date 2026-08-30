@@ -1,385 +1,189 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const officerName = document.getElementById('officerName');
-    const welcomeName = document.getElementById('welcomeName');
-    const officerAvatar = document.getElementById('officerAvatar');
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
-    if (officerName) {
-        const stored = localStorage.getItem('legalMetrixOfficerName') || 'Officer';
-        officerName.textContent = stored;
-        if (welcomeName) welcomeName.textContent = stored;
-        if (officerAvatar) officerAvatar.textContent = stored.charAt(0).toUpperCase();
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput') || document.getElementById('imageInput') || document.querySelector('input[type="file"]');
+    const scanBtn = document.getElementById('scanBtn') || document.getElementById('analyzeBtn') || document.querySelector('.scan-btn');
+    const dropZone = document.getElementById('dropZone') || document.querySelector('.drop-zone') || document.querySelector('.upload-area');
+    const previewImage = document.getElementById('previewImage') || document.getElementById('imagePreview');
+    const resultsSection = document.getElementById('resultsSection') || document.getElementById('results') || document.querySelector('.results-container');
+    const loadingSpinner = document.getElementById('loadingSpinner') || document.getElementById('loader') || document.querySelector('.spinner');
 
-    loadDashboardStats();
-    restoreRetakeInspection();
+    let selectedFile = null;
 
-    const input = document.getElementById('productImage');
-    const uploadArea = document.getElementById('uploadArea');
-    const analyzeButton = document.getElementById('analyzeButton');
-    const removeButton = document.getElementById('removeImage');
-    const newScanButton = document.getElementById('newScanButton');
-    const saveResultButton = document.getElementById('saveResultButton');
-    const cameraButton = document.getElementById('cameraButton');
-    const captureButton = document.getElementById('captureButton');
-    const closeCameraButton = document.getElementById('closeCameraButton');
-
-    if (input) {
-        input.addEventListener('change', function () {
-            if (this.files && this.files[0]) {
-                handleImage(this.files[0]);
+    // Handle File Selection
+    if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                showPreview(selectedFile);
             }
         });
     }
 
-    if (uploadArea) {
-        uploadArea.addEventListener('dragover', function (event) {
-            event.preventDefault();
-            uploadArea.classList.add('dragging');
+    // Handle Drag and Drop
+    if (dropZone) {
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
         });
 
-        uploadArea.addEventListener('dragleave', function () {
-            uploadArea.classList.remove('dragging');
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
         });
 
-        uploadArea.addEventListener('drop', function (event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragging');
-            const file = event.dataTransfer.files[0];
-            if (file) handleImage(file);
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                selectedFile = e.dataTransfer.files[0];
+                showPreview(selectedFile);
+            }
+        });
+
+        dropZone.addEventListener('click', () => {
+            if (fileInput) fileInput.click();
         });
     }
 
-    if (removeButton) removeButton.addEventListener('click', removeImage);
-    if (analyzeButton) analyzeButton.addEventListener('click', analyzeProduct);
-    if (newScanButton) newScanButton.addEventListener('click', resetScanner);
-    if (saveResultButton) saveResultButton.addEventListener('click', saveCurrentInspection);
-    if (cameraButton) cameraButton.addEventListener('click', openCamera);
-    if (captureButton) captureButton.addEventListener('click', captureImage);
-    if (closeCameraButton) closeCameraButton.addEventListener('click', closeCamera);
-});
-
-let cameraStream = null;
-
-async function openCamera() {
-    const cameraPanel = document.getElementById('cameraPanel');
-    const cameraPreview = document.getElementById('cameraPreview');
-    const cameraMessage = document.getElementById('cameraMessage');
-    const captureButton = document.getElementById('captureButton');
-
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showToast('Camera access is not supported by this browser.');
-        return;
-    }
-
-    try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: 'environment' } },
-            audio: false
-        });
-
-        cameraPreview.srcObject = cameraStream;
-        cameraPanel.classList.remove('hidden');
-        cameraPanel.setAttribute('aria-hidden', 'false');
-        cameraMessage.textContent = 'Position the product label inside the frame.';
-        captureButton.disabled = false;
-    } catch (error) {
-        cameraMessage.textContent = 'Camera access was blocked. Check browser permissions and try again.';
-        showToast('Unable to access the camera.');
-    }
-}
-
-function captureImage() {
-    const cameraPreview = document.getElementById('cameraPreview');
-
-    if (!cameraStream || !cameraPreview.videoWidth) {
-        showToast('Camera is not ready yet.');
-        return;
-    }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = cameraPreview.videoWidth;
-    canvas.height = cameraPreview.videoHeight;
-    canvas.getContext('2d').drawImage(cameraPreview, 0, 0);
-
-    canvas.toBlob(function (blob) {
-        if (blob) {
-            handleImage(new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' }));
-            closeCamera();
-        } else {
-            showToast('Unable to capture an image.');
-        }
-    }, 'image/jpeg', 0.92);
-}
-
-function closeCamera() {
-    const cameraPanel = document.getElementById('cameraPanel');
-    const cameraPreview = document.getElementById('cameraPreview');
-
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(function (track) {
-            track.stop();
-        });
-        cameraStream = null;
-    }
-
-    cameraPreview.srcObject = null;
-    cameraPanel.classList.add('hidden');
-    cameraPanel.setAttribute('aria-hidden', 'true');
-}
-
-function handleImage(file) {
-    if (!file.type.startsWith('image/')) {
-        showToast('Please select an image file.');
-        return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-        showToast('Image must be smaller than 10 MB.');
-        return;
-    }
-
-    selectedImage = file;
-
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const preview = document.getElementById('previewImage');
-        const previewContainer = document.getElementById('previewContainer');
-        const selectedFileName = document.getElementById('selectedFileName');
-        const analyzeButton = document.getElementById('analyzeButton');
-
-        if (preview) {
-            preview.src = event.target.result;
-            preview.dataset.image = event.target.result;
-        }
-
-        if (previewContainer) previewContainer.classList.remove('hidden');
-        if (selectedFileName) selectedFileName.textContent = file.name;
-        if (analyzeButton) analyzeButton.disabled = false;
-    };
-
-    reader.readAsDataURL(file);
-}
-
-function removeImage() {
-    selectedImage = null;
-
-    const productImage = document.getElementById('productImage');
-    const previewContainer = document.getElementById('previewContainer');
-    const analyzeButton = document.getElementById('analyzeButton');
-
-    if (productImage) productImage.value = '';
-    if (previewContainer) previewContainer.classList.add('hidden');
-    if (analyzeButton) analyzeButton.disabled = true;
-}
-
-function analyzeProduct() {
-    if (!selectedImage) {
-        showToast('Please upload a product image first.');
-        return;
-    }
-
-    const progress = document.getElementById('analysisProgress');
-    const button = document.getElementById('analyzeButton');
-
-    if (progress) progress.classList.remove('hidden');
-    if (button) button.disabled = true;
-
-    setTimeout(function () {
-        const result = generateMockAnalysis();
-        displayAnalysis(result);
-
-        if (progress) progress.classList.add('hidden');
-        const extractedSection = document.getElementById('extractedSection');
-        if (extractedSection) extractedSection.classList.remove('hidden');
-        extractedSection?.scrollIntoView({ behavior: 'smooth' });
-    }, 1800);
-}
-
-function generateMockAnalysis() {
-    return {
-        productName: 'ABC Premium Rice',
-        manufacturer: 'ABC Foods Pvt. Ltd.',
-        mrp: '₹120.00',
-        netQuantity: '5 kg',
-        manufacturingDate: '08/2026',
-        bestBefore: '6 Months',
-        consumerCare: '1800-123-4567',
-        countryOrigin: 'India',
-        score: 88,
-        status: 'WARNING',
-        violations: [
-            'Unit sale price declaration was not detected.',
-            'Please verify the minimum font-size/readability requirement.'
-        ]
-    };
-}
-
-function displayAnalysis(result) {
-    document.getElementById('productName').textContent = result.productName;
-    document.getElementById('manufacturer').textContent = result.manufacturer;
-    document.getElementById('mrp').textContent = result.mrp;
-    document.getElementById('netQuantity').textContent = result.netQuantity;
-    document.getElementById('manufacturingDate').textContent = result.manufacturingDate;
-    document.getElementById('bestBefore').textContent = result.bestBefore;
-    document.getElementById('consumerCare').textContent = result.consumerCare;
-    document.getElementById('countryOrigin').textContent = result.countryOrigin;
-    document.getElementById('complianceScore').textContent = result.score + '%';
-
-    const status = document.getElementById('overallStatus');
-    status.textContent = result.status;
-
-    if (result.status === 'COMPLIANT') {
-        status.style.background = '#dcfce7';
-        status.style.color = '#166534';
-    } else if (result.status === 'WARNING') {
-        status.style.background = '#fef3c7';
-        status.style.color = '#92400e';
-    } else {
-        status.style.background = '#fee2e2';
-        status.style.color = '#991b1b';
-    }
-
-    const list = document.getElementById('violationsList');
-    list.innerHTML = '';
-    window.lastGeneratedViolations = Array.isArray(result.violations) ? result.violations.slice() : [];
-
-    if (result.violations.length === 0) {
-        list.innerHTML = '<div class="violation" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;">✓ No issues detected.</div>';
-        return;
-    }
-
-    result.violations.forEach(function (item) {
-        const div = document.createElement('div');
-        div.className = 'violation';
-        div.textContent = '⚠ ' + item;
-        list.appendChild(div);
-    });
-}
-
-function generateInspectionReport(result) {
-    const lines = [
-        'LegalMetrix Inspection Report',
-        '===========================',
-        'Product Name: ' + (result.productName || 'N/A'),
-        'Manufacturer: ' + (result.manufacturer || 'N/A'),
-        'MRP: ' + (result.mrp || 'N/A'),
-        'Net Quantity: ' + (result.netQuantity || 'N/A'),
-        'Manufacturing Date: ' + (result.manufacturingDate || 'N/A'),
-        'Best Before: ' + (result.bestBefore || 'N/A'),
-        'Consumer Care: ' + (result.consumerCare || 'N/A'),
-        'Country of Origin: ' + (result.countryOrigin || 'N/A'),
-        'Category: ' + (result.category || 'N/A'),
-        'Compliance Score: ' + (result.score || '0%'),
-        'Status: ' + (result.status || 'WARNING'),
-        '',
-        'Detected Issues:',
-        (Array.isArray(result.violations) && result.violations.length ? result.violations.join('\n') : 'No issues detected.')
-    ];
-
-    return lines.join('\n');
-}
-
-function saveCurrentInspection() {
-    const image = document.getElementById('previewImage')?.dataset.image || '';
-    const result = {
-        id: 'LM-' + Date.now(),
-        productName: document.getElementById('productName').textContent,
-        manufacturer: document.getElementById('manufacturer').textContent,
-        mrp: document.getElementById('mrp').textContent,
-        netQuantity: document.getElementById('netQuantity').textContent,
-        manufacturingDate: document.getElementById('manufacturingDate').textContent,
-        bestBefore: document.getElementById('bestBefore').textContent,
-        consumerCare: document.getElementById('consumerCare').textContent,
-        countryOrigin: document.getElementById('countryOrigin').textContent,
-        score: document.getElementById('complianceScore').textContent,
-        status: document.getElementById('overallStatus').textContent,
-        category: document.getElementById('productCategory')?.value || 'Food / Grocery',
-        image,
-        report: generateInspectionReport({
-            productName: document.getElementById('productName').textContent,
-            manufacturer: document.getElementById('manufacturer').textContent,
-            mrp: document.getElementById('mrp').textContent,
-            netQuantity: document.getElementById('netQuantity').textContent,
-            manufacturingDate: document.getElementById('manufacturingDate').textContent,
-            bestBefore: document.getElementById('bestBefore').textContent,
-            consumerCare: document.getElementById('consumerCare').textContent,
-            countryOrigin: document.getElementById('countryOrigin').textContent,
-            score: document.getElementById('complianceScore').textContent,
-            status: document.getElementById('overallStatus').textContent,
-            category: document.getElementById('productCategory')?.value || 'Food / Grocery',
-            violations: Array.isArray(window.lastGeneratedViolations) ? window.lastGeneratedViolations : []
-        }),
-        date: new Date().toISOString()
-    };
-
-    saveInspection(result);
-    showToast('Inspection saved successfully.');
-    loadDashboardStats();
-}
-
-function loadDashboardStats() {
-    const inspections = getInspections();
-    const total = inspections.length;
-    const compliant = inspections.filter(item => item.status === 'COMPLIANT').length;
-    const violations = inspections.filter(item => item.status === 'NON_COMPLIANT').length;
-    const rate = total === 0 ? 0 : Math.round((compliant / total) * 100);
-
-    const totalScans = document.getElementById('totalScans');
-    const compliantCount = document.getElementById('compliantCount');
-    const violationCount = document.getElementById('violationCount');
-    const complianceRate = document.getElementById('complianceRate');
-
-    if (totalScans) totalScans.textContent = total;
-    if (compliantCount) compliantCount.textContent = compliant;
-    if (violationCount) violationCount.textContent = violations;
-    if (complianceRate) complianceRate.textContent = rate + '%';
-}
-
-function restoreRetakeInspection() {
-    const savedData = localStorage.getItem('legalMetrixRetakeInspection');
-    if (!savedData) return;
-
-    try {
-        const inspection = JSON.parse(savedData);
-        if (!inspection || !inspection.image) return;
-
-        const previewImage = document.getElementById('previewImage');
-        const previewContainer = document.getElementById('previewContainer');
-        const selectedFileName = document.getElementById('selectedFileName');
-        const analyzeButton = document.getElementById('analyzeButton');
-
+    function showPreview(file) {
         if (previewImage) {
-            previewImage.src = inspection.image;
-            previewImage.dataset.image = inspection.image;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        if (typeof showToast === 'function') {
+            showToast('Image selected: ' + file.name);
+        }
+    }
+
+    // Handle Scan Button Click
+    if (scanBtn) {
+        scanBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!selectedFile && fileInput && fileInput.files[0]) {
+                selectedFile = fileInput.files[0];
+            }
+
+            if (!selectedFile) {
+                alert('Please upload or select a product label image first.');
+                return;
+            }
+
+            await executeScan(selectedFile);
+        });
+    }
+
+    async function executeScan(file) {
+        // UI Loading State
+        if (loadingSpinner) loadingSpinner.style.display = 'block';
+        if (scanBtn) {
+            scanBtn.disabled = true;
+            scanBtn.textContent = 'Scanning & Verifying (OCR)...';
         }
 
-        if (previewContainer) previewContainer.classList.remove('hidden');
-        if (selectedFileName) selectedFileName.textContent = inspection.productName || 'Retake photo';
-        if (analyzeButton) analyzeButton.disabled = false;
+        const formData = new FormData();
+        formData.append('file', file);
 
-        selectedImage = inspection.image;
-        localStorage.removeItem('legalMetrixRetakeInspection');
-        showToast('Previous inspection image loaded for retake.');
-    } catch (error) {
-        localStorage.removeItem('legalMetrixRetakeInspection');
+        try {
+            console.log('Sending request to', `${API_BASE_URL}/scan`);
+            const response = await fetch(`${API_BASE_URL}/scan`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.detail || `Server responded with status ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Scan Successful:', data);
+
+            // Save to inspection history
+            if (typeof saveInspection === 'function') {
+                saveInspection({
+                    id: Date.now(),
+                    date: new Date().toISOString(),
+                    filename: data.filename || file.name,
+                    compliant: data.compliant,
+                    overall_status: data.overall_status,
+                    extracted_fields: data.extracted_fields || data.fields,
+                    report_url: data.report_url
+                });
+            }
+
+            // Render Results on UI
+            renderDashboardResults(data);
+
+            if (typeof showToast === 'function') {
+                showToast('Scan Completed: ' + data.overall_status);
+            }
+
+        } catch (error) {
+            console.error('Scan Failed:', error);
+            alert('Scan Failed: ' + error.message);
+        } finally {
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (scanBtn) {
+                scanBtn.disabled = false;
+                scanBtn.textContent = 'Scan Label';
+            }
+        }
     }
-}
 
-function resetScanner() {
-    selectedImage = null;
-    closeCamera();
+    function renderDashboardResults(data) {
+        if (resultsSection) {
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
 
-    const previewContainer = document.getElementById('previewContainer');
-    const extractedSection = document.getElementById('extractedSection');
-    const productImage = document.getElementById('productImage');
-    const analyzeButton = document.getElementById('analyzeButton');
+        // 1. Status Badge
+        const statusBadge = document.getElementById('complianceStatus') || document.getElementById('overallStatus') || document.querySelector('.status-badge');
+        if (statusBadge) {
+            const isCompliant = data.compliant;
+            statusBadge.textContent = isCompliant ? '🟢 COMPLIANT' : '🔴 NON-COMPLIANT';
+            statusBadge.className = isCompliant ? 'status-badge compliant' : 'status-badge non-compliant';
+        }
 
-    if (previewContainer) previewContainer.classList.add('hidden');
-    if (extractedSection) extractedSection.classList.add('hidden');
-    if (productImage) productImage.value = '';
-    if (analyzeButton) analyzeButton.disabled = true;
+        // 2. Extracted Fields
+        const fields = data.extracted_fields || data.fields || {};
+        
+        const setFieldText = (elementId, value) => {
+            const el = document.getElementById(elementId);
+            if (el) el.textContent = value || 'Not Detected';
+        };
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+        const getVal = (fieldObj) => {
+            if (!fieldObj) return null;
+            if (typeof fieldObj === 'string') return fieldObj;
+            return fieldObj.value || null;
+        };
 
-let selectedImage = null;
+        setFieldText('mrpValue', getVal(fields.mrp));
+        setFieldText('netQtyValue', getVal(fields.net_quantity));
+        setFieldText('mfgDateValue', getVal(fields.manufacturing_date));
+        setFieldText('bestBeforeValue', getVal(fields.best_before));
+        setFieldText('mfrValue', getVal(fields.manufacturer));
+
+        // 3. Action Guidance
+        const actionMessage = document.getElementById('actionMessage') || document.getElementById('frontendInstruction');
+        if (actionMessage && data.frontend_action) {
+            actionMessage.textContent = data.frontend_action.user_message || data.frontend_action.reason || '';
+        }
+
+        // 4. Report Download Button
+        const reportBtn = document.getElementById('downloadReportBtn') || document.getElementById('reportLink') || document.querySelector('.download-report-btn');
+        if (reportBtn) {
+            if (data.report_url) {
+                reportBtn.href = data.report_url;
+                reportBtn.target = '_blank';
+                reportBtn.style.display = 'inline-block';
+            } else {
+                reportBtn.style.display = 'none';
+            }
+        }
+    }
+});

@@ -1,902 +1,307 @@
 let selectedImage = null;
 
-
-/* ==========================================
-   PAGE INITIALIZATION
-========================================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadDashboardStats();
-
-
-        const input =
-            document.getElementById(
-                "productImage"
-            );
-
-
-        const uploadArea =
-            document.getElementById(
-                "uploadArea"
-            );
-
-
-        const analyzeButton =
-            document.getElementById(
-                "analyzeButton"
-            );
-
-
-        const removeButton =
-            document.getElementById(
-                "removeImage"
-            );
-
-
-        input.addEventListener(
-            "change",
-            function () {
-
-                if (
-                    this.files &&
-                    this.files[0]
-                ) {
-
-                    handleImage(
-                        this.files[0]
-                    );
-
-                }
-
-            }
-        );
-
-
-        removeButton.addEventListener(
-            "click",
-            removeImage
-        );
-
-
-        analyzeButton.addEventListener(
-            "click",
-            analyzeProduct
-        );
-
-
-        /* DRAG AND DROP */
-
-        uploadArea.addEventListener(
-            "dragover",
-            function (event) {
-
-                event.preventDefault();
-
-                uploadArea.classList.add(
-                    "dragging"
-                );
-
-            }
-        );
-
-
-        uploadArea.addEventListener(
-            "dragleave",
-            function () {
-
-                uploadArea.classList.remove(
-                    "dragging"
-                );
-
-            }
-        );
-
-
-        uploadArea.addEventListener(
-            "drop",
-            function (event) {
-
-                event.preventDefault();
-
-                uploadArea.classList.remove(
-                    "dragging"
-                );
-
-
-                const file =
-                    event
-                        .dataTransfer
-                        .files[0];
-
-
-                if (file) {
-
-                    handleImage(
-                        file
-                    );
-
-                }
-
-            }
-        );
-
-
-        document
-            .getElementById(
-                "newScanButton"
-            )
-            .addEventListener(
-                "click",
-                resetScanner
-            );
-
-
-        document
-            .getElementById(
-                "saveResultButton"
-            )
-            .addEventListener(
-                "click",
-                saveCurrentInspection
-            );
-
-    }
-);
-
-
-/* ==========================================
-   IMAGE HANDLING
-========================================== */
-
-function handleImage(file) {
-
-    if (
-        !file.type.startsWith(
-            "image/"
-        )
-    ) {
-
-        showToast(
-            "Please select an image file."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        file.size >
-        10 * 1024 * 1024
-    ) {
-
-        showToast(
-            "Image must be smaller than 10 MB."
-        );
-
-        return;
-
-    }
-
-
-    selectedImage =
-        file;
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload =
-        function (event) {
-
-            const preview =
-                document.getElementById(
-                    "previewImage"
-                );
-
-
-            preview.src =
-                event.target.result;
-
-
-            preview.dataset.image =
-                event.target.result;
-
-
-            document
-                .getElementById(
-                    "previewContainer"
-                )
-                .classList.remove(
-                    "hidden"
-                );
-
-
-            document
-                .getElementById(
-                    "selectedFileName"
-                )
-                .textContent =
-                file.name;
-
-
-            document
-                .getElementById(
-                    "analyzeButton"
-                )
-                .disabled =
-                false;
-
-        };
-
-
-    reader.readAsDataURL(
-        file
-    );
-
-}
-
-
-/* ==========================================
-   REMOVE IMAGE
-========================================== */
-
-function removeImage() {
-
-    selectedImage =
-        null;
-
-
-    document
-        .getElementById(
-            "productImage"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "previewContainer"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "analyzeButton"
-        )
-        .disabled =
-        true;
-
-}
-
-
-/* ==========================================
-   ANALYZE PRODUCT
-========================================== */
-
-function analyzeProduct() {
-
-    if (!selectedImage) {
-
-        showToast(
-            "Please upload a product image first."
-        );
-
-        return;
-
-    }
-
-
-    const progress =
-        document.getElementById(
-            "analysisProgress"
-        );
-
-
-    progress.classList.remove(
-        "hidden"
-    );
-
-
-    const button =
-        document.getElementById(
-            "analyzeButton"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    /*
-       THIS IS CURRENTLY A MOCK ANALYSIS.
-
-       Later replace this function with:
-
-       fetch("/api/analyze", {
-           method: "POST",
-           body: formData
-       })
-
-       The backend can then use:
-       OCR + AI + Legal Metrology rules.
-    */
-
-
-    setTimeout(
-        function () {
-
-            const result =
-                generateMockAnalysis();
-
-
-            displayAnalysis(
-                result
-            );
-
-
-            progress.classList.add(
-                "hidden"
-            );
-
-
-            document
-                .getElementById(
-                    "extractedSection"
-                )
-                .classList.remove(
-                    "hidden"
-                );
-
-
-            document
-                .getElementById(
-                    "extractedSection"
-                )
-                .scrollIntoView({
-                    behavior:
-                        "smooth"
-                });
-
-
-        },
-        1800
-    );
-
-}
-
-
-/* ==========================================
-   MOCK OCR / AI RESULT
-========================================== */
-
-function generateMockAnalysis() {
-
-    /*
-        These values simulate what your
-        future OCR + AI backend will return.
-    */
-
-
-    return {
-
-        productName:
-            "ABC Premium Rice",
-
-        manufacturer:
-            "ABC Foods Pvt. Ltd.",
-
-        mrp:
-            "₹120.00",
-
-        netQuantity:
-            "5 kg",
-
-        manufacturingDate:
-            "08/2026",
-
-        bestBefore:
-            "6 Months",
-
-        consumerCare:
-            "1800-123-4567",
-
-        countryOrigin:
-            "India",
-
-        score:
-            88,
-
-        status:
-            "WARNING",
-
-        violations: [
-
-            "Unit sale price declaration was not detected.",
-
-            "Please verify the minimum font-size/readability requirement."
-
-        ]
-
-    };
-
-}
-
-
-/* ==========================================
-   DISPLAY RESULT
-========================================== */
-
-function displayAnalysis(
-    result
-) {
-
-    document.getElementById(
-        "productName"
-    ).textContent =
-        result.productName;
-
-
-    document.getElementById(
-        "manufacturer"
-    ).textContent =
-        result.manufacturer;
-
-
-    document.getElementById(
-        "mrp"
-    ).textContent =
-        result.mrp;
-
-
-    document.getElementById(
-        "netQuantity"
-    ).textContent =
-        result.netQuantity;
-
-
-    document.getElementById(
-        "manufacturingDate"
-    ).textContent =
-        result.manufacturingDate;
-
-
-    document.getElementById(
-        "bestBefore"
-    ).textContent =
-        result.bestBefore;
-
-
-    document.getElementById(
-        "consumerCare"
-    ).textContent =
-        result.consumerCare;
-
-
-    document.getElementById(
-        "countryOrigin"
-    ).textContent =
-        result.countryOrigin;
-
-
-    document.getElementById(
-        "complianceScore"
-    ).textContent =
-        result.score + "%";
-
-
-    const status =
-        document.getElementById(
-            "overallStatus"
-        );
-
-
-    status.textContent =
-        result.status;
-
-
-    /* STATUS COLOR */
-
-    if (
-        result.status ===
-        "COMPLIANT"
-    ) {
-
-        status.style.background =
-            "#dcfce7";
-
-        status.style.color =
-            "#166534";
-
-    }
-
-    else if (
-        result.status ===
-        "WARNING"
-    ) {
-
-        status.style.background =
-            "#fef3c7";
-
-        status.style.color =
-            "#92400e";
-
-    }
-
-    else {
-
-        status.style.background =
-            "#fee2e2";
-
-        status.style.color =
-            "#991b1b";
-
-    }
-
-
-    /* VIOLATIONS */
-
-    const list =
-        document.getElementById(
-            "violationsList"
-        );
-
-
-    list.innerHTML =
-        "";
-
-
-    if (
-        result.violations.length ===
-        0
-    ) {
-
-        list.innerHTML = `
-
-            <div class="violation"
-                 style="
-                    background:#f0fdf4;
-                    border-color:#bbf7d0;
-                    color:#166534;
-                 ">
-
-                ✓ No issues detected.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    result.violations.forEach(
-        function (item) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "violation";
-
-
-            div.textContent =
-                "⚠ " + item;
-
-
-            list.appendChild(
-                div
-            );
-
-        }
-    );
-
-}
-
-
-/* ==========================================
-   SAVE RESULT
-========================================== */
-
-function saveCurrentInspection() {
-
-    const image =
-        document.getElementById(
-            "previewImage"
-        ).dataset.image || "";
-
-
-    const result = {
-
-        id:
-            "LM-" +
-            Date.now(),
-
-        productName:
-            document.getElementById(
-                "productName"
-            ).textContent,
-
-        manufacturer:
-            document.getElementById(
-                "manufacturer"
-            ).textContent,
-
-        mrp:
-            document.getElementById(
-                "mrp"
-            ).textContent,
-
-        netQuantity:
-            document.getElementById(
-                "netQuantity"
-            ).textContent,
-
-        manufacturingDate:
-            document.getElementById(
-                "manufacturingDate"
-            ).textContent,
-
-        bestBefore:
-            document.getElementById(
-                "bestBefore"
-            ).textContent,
-
-        consumerCare:
-            document.getElementById(
-                "consumerCare"
-            ).textContent,
-
-        countryOrigin:
-            document.getElementById(
-                "countryOrigin"
-            ).textContent,
-
-        score:
-            document.getElementById(
-                "complianceScore"
-            ).textContent,
-
-        status:
-            document.getElementById(
-                "overallStatus"
-            ).textContent,
-
-        category:
-            document.getElementById(
-                "productCategory"
-            ).value,
-
-        image,
-
-        date:
-            new Date().toISOString()
-
-    };
-
-
-    saveInspection(
-        result
-    );
-
-
-    showToast(
-        "Inspection saved successfully."
-    );
-
-
+document.addEventListener("DOMContentLoaded", function () {
     loadDashboardStats();
 
-}
+    const input = document.getElementById("productImage");
+    const uploadArea = document.getElementById("uploadArea");
+    const analyzeButton = document.getElementById("analyzeButton");
+    const removeButton = document.getElementById("removeImage");
 
-
-/* ==========================================
-   DASHBOARD STATS
-========================================== */
-
-function loadDashboardStats() {
-
-    const inspections =
-        getInspections();
-
-
-    const total =
-        inspections.length;
-
-
-    const compliant =
-        inspections.filter(
-            item =>
-                item.status ===
-                "COMPLIANT"
-        ).length;
-
-
-    const violations =
-        inspections.filter(
-            item =>
-                item.status ===
-                "NON_COMPLIANT"
-        ).length;
-
-
-    const rate =
-        total === 0
-            ? 0
-            : Math.round(
-                (
-                    compliant /
-                    total
-                ) * 100
-            );
-
-
-    document.getElementById(
-        "totalScans"
-    ).textContent =
-        total;
-
-
-    document.getElementById(
-        "compliantCount"
-    ).textContent =
-        compliant;
-
-
-    document.getElementById(
-        "violationCount"
-    ).textContent =
-        violations;
-
-
-    document.getElementById(
-        "complianceRate"
-    ).textContent =
-        rate + "%";
-
-}
-
-
-/* ==========================================
-   RESET
-========================================== */
-
-function resetScanner() {
-
-    selectedImage =
-        null;
-
-
-    document
-        .getElementById(
-            "previewContainer"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "extractedSection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "productImage"
-        )
-        .value =
-        "";
-
-
-    document
-        .getElementById(
-            "analyzeButton"
-        )
-        .disabled =
-        true;
-
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-/* ==========================================
-   SCROLL
-========================================== */
-
-function scrollToScanner() {
-
-    document
-        .getElementById(
-            "scanner"
-        )
-        .scrollIntoView({
-            behavior:
-                "smooth"
+    if (input) {
+        input.addEventListener("change", function (e) {
+            if (e.target.files && e.target.files[0]) {
+                handleImage(e.target.files[0]);
+            }
         });
-
-}
-
-
-/* ==========================================
-   STORAGE HELPERS
-========================================== */
-
-function getInspections() {
-
-    try {
-
-        const data =
-            localStorage.getItem(
-                "legalMetrixInspections"
-            );
-
-        return data ? JSON.parse(data) : [];
-
-    } catch (error) {
-
-        return [];
-
     }
 
-}
+    if (uploadArea) {
+        uploadArea.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            uploadArea.classList.add("dragging");
+        });
 
+        uploadArea.addEventListener("dragleave", function () {
+            uploadArea.classList.remove("dragging");
+        });
 
-function saveInspection(result) {
+        uploadArea.addEventListener("drop", function (e) {
+            e.preventDefault();
+            uploadArea.classList.remove("dragging");
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleImage(e.dataTransfer.files[0]);
+            }
+        });
+    }
 
-    const inspections =
-        getInspections();
+    if (removeButton) {
+        removeButton.addEventListener("click", removeImage);
+    }
 
-    inspections.push(result);
+    if (analyzeButton) {
+        analyzeButton.addEventListener("click", analyzeProduct);
+    }
 
-    localStorage.setItem(
-        "legalMetrixInspections",
-        JSON.stringify(inspections)
-    );
+    const newScanBtn = document.getElementById("newScanButton");
+    if (newScanBtn) newScanBtn.addEventListener("click", resetScanner);
 
-}
+    const saveResultBtn = document.getElementById("saveResultButton");
+    if (saveResultBtn) saveResultBtn.addEventListener("click", saveCurrentInspection);
+});
 
-
-function showToast(message) {
-
-    const toast =
-        document.getElementById(
-            "toast"
-        );
-
-    if (!toast) {
+function handleImage(file) {
+    if (!file.type.startsWith("image/")) {
+        showToast("Please select a valid image file.");
         return;
     }
 
+    selectedImage = file;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const preview = document.getElementById("previewImage");
+        if (preview) {
+            preview.src = event.target.result;
+            preview.dataset.image = event.target.result;
+        }
+
+        const previewContainer = document.getElementById("previewContainer");
+        if (previewContainer) previewContainer.classList.remove("hidden");
+
+        const fileNameEl = document.getElementById("selectedFileName");
+        if (fileNameEl) fileNameEl.textContent = file.name;
+
+        const analyzeButton = document.getElementById("analyzeButton");
+        if (analyzeButton) analyzeButton.disabled = false;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    selectedImage = null;
+    const input = document.getElementById("productImage");
+    if (input) input.value = "";
+
+    const previewContainer = document.getElementById("previewContainer");
+    if (previewContainer) previewContainer.classList.add("hidden");
+
+    const analyzeButton = document.getElementById("analyzeButton");
+    if (analyzeButton) analyzeButton.disabled = true;
+}
+
+async function analyzeProduct() {
+    if (!selectedImage) {
+        showToast("Please upload an image first.");
+        return;
+    }
+
+    const progress = document.getElementById("analysisProgress");
+    const button = document.getElementById("analyzeButton");
+
+    if (progress) progress.classList.remove("hidden");
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Processing OCR & Legal Rules...";
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append("file", selectedImage);
+
+        const response = await fetch("http://127.0.0.1:8000/scan", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Backend error: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("BACKEND RESULT:", data);
+
+        const fields = data.extracted_fields || data.fields || {};
+        const compliance = data.compliance_details || data.compliance || {};
+
+        const getVal = (val) => {
+            if (!val) return "-";
+            if (typeof val === "object") return val.value || "-";
+            return val;
+        };
+
+        const result = {
+            productName: getVal(fields.product_name),
+            manufacturer: getVal(fields.manufacturer),
+            mrp: getVal(fields.mrp),
+            netQuantity: getVal(fields.net_quantity),
+            manufacturingDate: getVal(fields.manufacturing_date),
+            bestBefore: getVal(fields.best_before),
+            consumerCare: getVal(fields.consumer_care),
+            countryOrigin: getVal(fields.country_of_origin),
+            score: data.compliant ? 100 : 40,
+            status: data.overall_status || (data.compliant ? "COMPLIANT" : "NON_COMPLIANT"),
+            violations: data.violations || compliance.violations || [],
+            reportUrl: data.report_url
+        };
+
+        displayAnalysis(result);
+
+        if (progress) progress.classList.add("hidden");
+
+        const extSection = document.getElementById("extractedSection");
+        if (extSection) {
+            extSection.classList.remove("hidden");
+            extSection.scrollIntoView({ behavior: "smooth" });
+        }
+
+        showToast("Product analysis completed.");
+
+    } catch (error) {
+        console.error("Backend connection error:", error);
+        if (progress) progress.classList.add("hidden");
+        showToast("Could not connect to backend.");
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Analyze Label";
+        }
+    }
+}
+
+function displayAnalysis(result) {
+    const setEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    setEl("productName", result.productName);
+    setEl("manufacturer", result.manufacturer);
+    setEl("mrp", result.mrp);
+    setEl("netQuantity", result.netQuantity);
+    setEl("manufacturingDate", result.manufacturingDate);
+    setEl("bestBefore", result.bestBefore);
+    setEl("consumerCare", result.consumerCare);
+    setEl("countryOrigin", result.countryOrigin);
+    setEl("complianceScore", result.score + "%");
+
+    const status = document.getElementById("overallStatus");
+    if (status) {
+        status.textContent = result.status;
+        if (result.status === "COMPLIANT") {
+            status.style.background = "#dcfce7";
+            status.style.color = "#166534";
+        } else {
+            status.style.background = "#fee2e2";
+            status.style.color = "#991b1b";
+        }
+    }
+
+    const list = document.getElementById("violationsList");
+    if (list) {
+        list.innerHTML = "";
+        if (result.violations.length === 0) {
+            list.innerHTML = `
+                <div class="violation" style="background:#f0fdf4; border-color:#bbf7d0; color:#166534; padding: 10px; border-radius: 6px;">
+                    ✓ All mandatory declarations verified.
+                </div>
+            `;
+        } else {
+            result.violations.forEach((item) => {
+                const div = document.createElement("div");
+                div.className = "violation";
+                div.textContent = "⚠ " + item;
+                list.appendChild(div);
+            });
+        }
+    }
+
+    let pdfBtn = document.getElementById("downloadReportBtn");
+    if (!pdfBtn && result.reportUrl) {
+        const extSection = document.getElementById("extractedSection");
+        if (extSection) {
+            pdfBtn = document.createElement("a");
+            pdfBtn.id = "downloadReportBtn";
+            pdfBtn.className = "btn btn-primary";
+            pdfBtn.style.display = "inline-block";
+            pdfBtn.style.marginTop = "15px";
+            pdfBtn.style.textDecoration = "none";
+            pdfBtn.textContent = "📄 Download PDF Report";
+            pdfBtn.target = "_blank";
+            extSection.appendChild(pdfBtn);
+        }
+    }
+    if (pdfBtn && result.reportUrl) {
+        pdfBtn.href = result.reportUrl;
+    }
+}
+
+function saveCurrentInspection() {
+    const preview = document.getElementById("previewImage");
+    const image = (preview && preview.dataset.image) || "";
+
+    const result = {
+        id: "LM-" + Date.now(),
+        productName: (document.getElementById("productName") || {}).textContent || "-",
+        manufacturer: (document.getElementById("manufacturer") || {}).textContent || "-",
+        mrp: (document.getElementById("mrp") || {}).textContent || "-",
+        status: (document.getElementById("overallStatus") || {}).textContent || "NON_COMPLIANT",
+        image: image,
+        date: new Date().toISOString()
+    };
+
+    saveInspection(result);
+    showToast("Inspection saved successfully.");
+    loadDashboardStats();
+}
+
+function loadDashboardStats() {
+    const inspections = getInspections();
+    const total = inspections.length;
+    const compliant = inspections.filter((i) => i.status === "COMPLIANT").length;
+    const violations = total - compliant;
+    const rate = total === 0 ? 0 : Math.round((compliant / total) * 100);
+
+    const setEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    setEl("totalScans", total);
+    setEl("compliantCount", compliant);
+    setEl("violationCount", violations);
+    setEl("complianceRate", rate + "%");
+}
+
+function resetScanner() {
+    removeImage();
+    const ext = document.getElementById("extractedSection");
+    if (ext) ext.classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function getInspections() {
+    try {
+        const data = localStorage.getItem("legalMetrixInspections");
+        return data ? JSON.parse(data) : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveInspection(result) {
+    const inspections = getInspections();
+    inspections.push(result);
+    localStorage.setItem("legalMetrixInspections", JSON.stringify(inspections));
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
     toast.textContent = message;
     toast.style.display = "block";
-
     clearTimeout(showToast.timeoutId);
-
-    showToast.timeoutId =
-        setTimeout(function () {
-            toast.style.display = "none";
-        }, 2200);
-
+    showToast.timeoutId = setTimeout(() => {
+        toast.style.display = "none";
+    }, 2500);
 }
