@@ -137,43 +137,51 @@ def extract_product_fields(ocr_text):
     # MRP
     # ==================================================
 
+    # Matches "MRP", "M.R.P.", "M.R.P", "M R P", "Maximum Retail Price",
+    # with or without a trailing colon/dash, in any case.
+    mrp_label_pattern = re.compile(
+        r"(?:maximum retail price|m\.?\s*r\.?\s*p\.?)"
+        r"(?=\s|:|-|₹|rs\.?|inr|$)",
+        re.IGNORECASE
+    )
+
+    currency_pattern = re.compile(
+        r"(₹|rs\.?|inr)\s*(\d+(?:\.\d+)?)",
+        re.IGNORECASE
+    )
+
     for i, line in enumerate(lines):
 
-        normalized = re.sub(r"[^a-zA-Z]", "", line).lower()
+        label_match = mrp_label_pattern.search(line)
 
-        # MRP / M.R.P. / M.R.P..
-        if normalized == "mrp":
+        if not label_match:
+            continue
 
-            # Example:
-            # MRP
-            # ₹20
-            if i + 1 < len(lines):
+        # Example (same line):
+        # MRP ₹20
+        # M.R.P. ₹20
+        # M.R.P.: ₹20
+        # Maximum Retail Price ₹20
+        after_label = line[label_match.end():].strip()
+        after_label = after_label.lstrip(":- ").strip()
 
-                next_line = lines[i + 1].strip()
+        match = currency_pattern.search(after_label)
 
-                # Only accept the next line if it
-                # actually contains a currency marker.
-                match = re.search(
-                    r"(₹|rs\.?|inr)\s*(\d+(?:\.\d+)?)",
-                    next_line,
-                    re.IGNORECASE
-                )
+        if match:
+            product_data["mrp"] = match.group(0)
+            break
 
-                if match:
-                    product_data["mrp"] = next_line
-                    break
+        # Example (value on next line):
+        # MRP
+        # ₹20
+        if i + 1 < len(lines):
 
-        # Maximum Retail Price
-        elif "maximum retail price" in line.lower():
+            next_line = lines[i + 1].strip()
 
-            match = re.search(
-                r"(₹|rs\.?|inr)\s*(\d+(?:\.\d+)?)",
-                line,
-                re.IGNORECASE
-            )
+            match = currency_pattern.search(next_line)
 
             if match:
-                product_data["mrp"] = match.group(0)
+                product_data["mrp"] = next_line
                 break
 
     # ==================================================
