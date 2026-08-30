@@ -40,6 +40,68 @@ def extract_product_fields(ocr_text):
     ]
 
     # ==================================================
+    # PRODUCT NAME
+    # ==================================================
+
+    product_name_labels = [
+        "product name",
+        "product"
+    ]
+
+    for i, line in enumerate(lines):
+
+        lower = line.lower()
+
+        for label in product_name_labels:
+
+            if lower.startswith(label):
+
+                after_label = line[len(label):].strip()
+                after_label = after_label.lstrip(":- ").strip()
+
+                if after_label:
+                    product_data["product_name"] = after_label
+                    break
+
+                if i + 1 < len(lines):
+                    product_data["product_name"] = lines[i + 1]
+                    break
+
+        if product_data["product_name"]:
+            break
+
+    # ==================================================
+    # BRAND NAME
+    # ==================================================
+
+    brand_name_labels = [
+        "brand name",
+        "brand"
+    ]
+
+    for i, line in enumerate(lines):
+
+        lower = line.lower()
+
+        for label in brand_name_labels:
+
+            if lower.startswith(label):
+
+                after_label = line[len(label):].strip()
+                after_label = after_label.lstrip(":- ").strip()
+
+                if after_label:
+                    product_data["brand_name"] = after_label
+                    break
+
+                if i + 1 < len(lines):
+                    product_data["brand_name"] = lines[i + 1]
+                    break
+
+        if product_data["brand_name"]:
+            break
+
+    # ==================================================
     # NET QUANTITY
     # ==================================================
 
@@ -60,8 +122,6 @@ def extract_product_fields(ocr_text):
 
             if label in lower:
 
-                # Example:
-                # Net Weight 32g
                 after_label = lower.split(label, 1)[-1].strip()
 
                 match = re.search(
@@ -74,9 +134,6 @@ def extract_product_fields(ocr_text):
                     product_data["net_quantity"] = match.group(0)
                     break
 
-                # Example:
-                # Net Weight
-                # 32g
                 if i + 1 < len(lines):
 
                     match = re.search(
@@ -110,22 +167,16 @@ def extract_product_fields(ocr_text):
 
             if label in lower:
 
-                # Example:
-                # Common Generic Name: Potato Chips
                 after_label = line[
                     lower.find(label) + len(label):
                 ].strip()
 
-                # Remove : or -
                 after_label = after_label.lstrip(":- ").strip()
 
                 if after_label:
                     product_data["common_generic_name"] = after_label
                     break
 
-                # Example:
-                # Common Generic Name
-                # Potato Chips
                 if i + 1 < len(lines):
                     product_data["common_generic_name"] = lines[i + 1]
                     break
@@ -137,8 +188,6 @@ def extract_product_fields(ocr_text):
     # MRP
     # ==================================================
 
-    # Matches "MRP", "M.R.P.", "M.R.P", "M R P", "Maximum Retail Price",
-    # with or without a trailing colon/dash, in any case.
     mrp_label_pattern = re.compile(
         r"(?:maximum retail price|m\.?\s*r\.?\s*p\.?)"
         r"(?=\s|:|-|₹|rs\.?|inr|$)",
@@ -157,11 +206,6 @@ def extract_product_fields(ocr_text):
         if not label_match:
             continue
 
-        # Example (same line):
-        # MRP ₹20
-        # M.R.P. ₹20
-        # M.R.P.: ₹20
-        # Maximum Retail Price ₹20
         after_label = line[label_match.end():].strip()
         after_label = after_label.lstrip(":- ").strip()
 
@@ -171,9 +215,6 @@ def extract_product_fields(ocr_text):
             product_data["mrp"] = match.group(0)
             break
 
-        # Example (value on next line):
-        # MRP
-        # ₹20
         if i + 1 < len(lines):
 
             next_line = lines[i + 1].strip()
@@ -270,7 +311,6 @@ def extract_product_fields(ocr_text):
                     lower.find(label) + len(label):
                 ].strip()
 
-                # Numeric date
                 match = re.search(
                     date_pattern,
                     after_label
@@ -280,7 +320,6 @@ def extract_product_fields(ocr_text):
                     product_data["packing_date"] = match.group(0)
                     break
 
-                # Month + year
                 match = month_year_pattern.search(
                     after_label
                 )
@@ -289,7 +328,6 @@ def extract_product_fields(ocr_text):
                     product_data["packing_date"] = match.group(0)
                     break
 
-                # Value on next line
                 if i + 1 < len(lines):
 
                     next_line = lines[i + 1]
@@ -508,6 +546,7 @@ def extract_product_fields(ocr_text):
                 after_label = after_label.lstrip(":- ").strip()
 
                 if after_label:
+
                     product_data["manufacturer_name"] = after_label
 
                     if i + 1 < len(lines):
