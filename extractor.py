@@ -71,6 +71,76 @@ def extract_product_fields(ocr_text):
             break
 
     # ==================================================
+    # PRODUCT NAME FALLBACK
+    # ==================================================
+
+    # If there is no Product/Product Name label,
+    # use the first meaningful OCR line that is not
+    # a known field label.
+
+    if not product_data["product_name"]:
+
+        known_field_labels = [
+            "common generic name",
+            "common generic",
+            "generic name",
+            "net weight",
+            "net content",
+            "net quantity",
+            "net. wt.",
+            "net wt.",
+            "net qty",
+            "mrp",
+            "m.r.p",
+            "maximum retail price",
+            "mfd",
+            "mfg",
+            "manufactured on",
+            "date of manufacture",
+            "manufacturing date",
+            "pkd",
+            "packed on",
+            "date of packing",
+            "packing date",
+            "best before",
+            "expiry",
+            "expiry date",
+            "exp date",
+            "use by",
+            "use before",
+            "customer care",
+            "consumer care",
+            "consumer helpline",
+            "customer service",
+            "consumer service",
+            "country of origin",
+            "made in",
+            "product of",
+            "manufactured by",
+            "manufactured & marketed by",
+            "manufactured and marketed by",
+            "marketed by"
+        ]
+
+        for line in lines:
+
+            lower = line.lower().strip()
+
+            # Skip known field-label lines
+            if any(
+                lower.startswith(label)
+                for label in known_field_labels
+            ):
+                continue
+
+            # Skip lines that contain no alphabetic characters
+            if not re.search(r"[A-Za-z]", line):
+                continue
+
+            product_data["product_name"] = line
+            break
+
+    # ==================================================
     # BRAND NAME
     # ==================================================
 
@@ -311,6 +381,7 @@ def extract_product_fields(ocr_text):
                     lower.find(label) + len(label):
                 ].strip()
 
+                # Numeric date
                 match = re.search(
                     date_pattern,
                     after_label
@@ -320,6 +391,7 @@ def extract_product_fields(ocr_text):
                     product_data["packing_date"] = match.group(0)
                     break
 
+                # Month + year
                 match = month_year_pattern.search(
                     after_label
                 )
@@ -328,6 +400,7 @@ def extract_product_fields(ocr_text):
                     product_data["packing_date"] = match.group(0)
                     break
 
+                # Value on next line
                 if i + 1 < len(lines):
 
                     next_line = lines[i + 1]
