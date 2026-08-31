@@ -1,8 +1,14 @@
 import os
 import shutil
+import sys
 import uuid
 from pathlib import Path
 from typing import Any, Dict
+
+# Ensure repository root is importable whether the app is started from backend/ or repo root
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
