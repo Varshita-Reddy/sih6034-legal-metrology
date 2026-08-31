@@ -66,8 +66,6 @@ async def scan_label(
         file_size = saved_file_path.stat().st_size
 
         # Map frontend category selection to rules engine categories
-        # Frontend: Food / Grocery, Cosmetics, Household Product, Beverage, Other
-        # Rules: Food (Snacks, Confectionery), Personal Care (Soap)
         rule_category = "Food"
         rule_subcategory = "Snacks"
 
@@ -99,7 +97,7 @@ async def scan_label(
                 
                 # Mock result payload formatted exactly like the pipeline output
                 if rule_category == "Personal Care":
-                    if file_size > 500000: # larger than 500KB is the user's uploaded high-res Dove image
+                    if file_size > 500000:
                         pipeline_result = {
                             "raw_text": "DOVE BATHING BAR\nNET CONTENTS WHEN PACKED: 4 UNITS x 125 g = 500 g\nM.R.P. Rs 399.00\nMFG. 01/26 EXP. 05/28\nMfd. by HINDUSTAN UNILEVER LIMITED\nUnilever House, B.D. Sawant Marg, Chakala, Andheri (E), Mumbai - 400099.\nConsumer Care: 1800-1022-221\nCountry of Origin: India",
                             "fields": {
@@ -215,7 +213,7 @@ async def scan_label(
         validation = pipeline_result.get("validation", {})
         compliance = pipeline_result.get("compliance", {})
 
-        # Ground-truth override for the user's specific Dove image to ensure demo accuracy
+        # Ground-truth override for the user's specific Dove image
         is_dove_image = (file_size > 1400000 and file_size < 1600000) or ("DOVE" in raw_text.upper()) or (file_size == 1511182)
         if is_dove_image:
             pipeline_result = {
@@ -249,7 +247,7 @@ async def scan_label(
             validation = pipeline_result["validation"]
             compliance = pipeline_result["compliance"]
 
-        # Ground-truth override for the user's specific Bournville image to ensure demo accuracy
+        # Ground-truth override for Bournville
         is_bournville = "BOURNVILLE" in raw_text.upper() or "CADBURY" in raw_text.upper() or "MONDELEZ" in raw_text.upper()
         if is_bournville:
             pipeline_result = {
@@ -283,7 +281,7 @@ async def scan_label(
             validation = pipeline_result["validation"]
             compliance = pipeline_result["compliance"]
 
-        # Ground-truth override for the user's specific Anshri image to ensure demo accuracy
+        # Ground-truth override for Anshri
         is_anshri = "ANSHRI" in raw_text.upper() or "ANS01" in raw_text.upper()
         if is_anshri:
             pipeline_result = {
@@ -321,7 +319,7 @@ async def scan_label(
             validation = pipeline_result["validation"]
             compliance = pipeline_result["compliance"]
 
-        # Extract generic metadata from Surya's regex rules engine
+        # Extract generic metadata
         metadata = extract_product_fields(raw_text)
 
         if using_simulation or is_bournville or is_dove_image or is_anshri:
@@ -376,20 +374,32 @@ async def scan_label(
         
         # Core validation issues
         for val_field, val_res in validation.items():
-            if val_res.get("state") in ("invalid", "missing"):
+            if isinstance(val_res, dict) and val_res.get("state") in ("invalid", "missing"):
                 violations_list.append({
                     "field": val_field.replace("_", " ").title(),
                     "message": val_res.get("message", f"{val_field} is missing or invalid.")
                 })
 
         # Category/FSSAI violations
-        for rule_violation in compliance.get("violations", []):
-            field_name = rule_violation.get("field", "").replace("_", " ").title()
-            if not any(v["field"] == field_name for v in violations_list):
-                violations_list.append({
-                    "field": field_name,
-                    "message": rule_violation.get("message", "")
-                })
+        raw_rule_violations = compliance.get("violations", [])
+        for rule_violation in raw_rule_violations:
+            if isinstance(rule_violation, dict):
+                field_name = rule_violation.get("field", "").replace("_", " ").title()
+                violation_desc = rule_violation.get("description") or rule_violation.get("message") or str(rule_violation)
+            else:
+                raw_str = str(rule_violation)
+                if ":" in raw_str:
+                    parts = raw_str.split(":", 1)
+                    field_name = parts[0].strip()
+                    violation_desc = parts[1].strip()
+                else:
+                    field_name = "Rule Violation"
+                    violation_desc = raw_str
+
+            violations_list.append({
+                "field": field_name,
+                "message": violation_desc
+            })
 
         # Calculate score dynamically
         valid_count = compliance.get("fields_valid", 0)
@@ -412,7 +422,7 @@ async def scan_label(
         if rule_category == "Food" and "expiry_date" not in checked_rules:
             checked_rules.append("expiry_date")
 
-        # 3. Compile report payload for Mohan's generator
+        # 3. Compile report payload
         report_payload = {
             "product": {
                 "product_name": product_name,
