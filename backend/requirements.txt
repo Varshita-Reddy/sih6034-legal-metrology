@@ -4,4 +4,4 @@ python-multipart
 numpy
 opencv-python-headless
 paddleocr
-paddlepaddle
+paddlepaddle==2.6.1
