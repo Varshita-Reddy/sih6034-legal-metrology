@@ -57,6 +57,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cameraButton) cameraButton.addEventListener('click', openCamera);
     if (captureButton) captureButton.addEventListener('click', captureImage);
     if (closeCameraButton) closeCameraButton.addEventListener('click', closeCamera);
+
+    const downloadReportBtn = document.getElementById('downloadReportBtn');
+    if (downloadReportBtn) {
+        downloadReportBtn.addEventListener('click', function() {
+            if (currentScanReportUrl) {
+                const link = document.createElement('a');
+                link.href = 'http://127.0.0.1:8000' + currentScanReportUrl;
+                link.download = (document.getElementById('productName').textContent || 'inspection-report') + '.pdf';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } else {
+                showToast('No PDF report available.');
+            }
+        });
+    }
 });
 
 let cameraStream = null;
@@ -181,38 +198,51 @@ function analyzeProduct() {
 
     const progress = document.getElementById('analysisProgress');
     const button = document.getElementById('analyzeButton');
+    const extractedSection = document.getElementById('extractedSection');
 
     if (progress) progress.classList.remove('hidden');
     if (button) button.disabled = true;
+    if (extractedSection) extractedSection.classList.add('hidden');
 
-    setTimeout(function () {
-        const result = generateMockAnalysis();
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+
+    const category = document.getElementById('productCategory')?.value || 'Food / Grocery';
+    formData.append('category', category);
+
+    fetch('http://127.0.0.1:8000/scan', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Server responded with an error: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(result => {
+        currentScanReportUrl = result.reportUrl;
         displayAnalysis(result);
 
         if (progress) progress.classList.add('hidden');
-        const extractedSection = document.getElementById('extractedSection');
         if (extractedSection) extractedSection.classList.remove('hidden');
         extractedSection?.scrollIntoView({ behavior: 'smooth' });
-    }, 1800);
-}
 
-function generateMockAnalysis() {
-    return {
-        productName: 'ABC Premium Rice',
-        manufacturer: 'ABC Foods Pvt. Ltd.',
-        mrp: '₹120.00',
-        netQuantity: '5 kg',
-        manufacturingDate: '08/2026',
-        bestBefore: '6 Months',
-        consumerCare: '1800-123-4567',
-        countryOrigin: 'India',
-        score: 88,
-        status: 'WARNING',
-        violations: [
-            'Unit sale price declaration was not detected.',
-            'Please verify the minimum font-size/readability requirement.'
-        ]
-    };
+        const downloadReportBtn = document.getElementById('downloadReportBtn');
+        if (downloadReportBtn) {
+            if (result.reportUrl) {
+                downloadReportBtn.classList.remove('hidden');
+            } else {
+                downloadReportBtn.classList.add('hidden');
+            }
+        }
+    })
+    .catch(error => {
+        if (progress) progress.classList.add('hidden');
+        if (button) button.disabled = false;
+        showToast('Error inspecting product: ' + error.message);
+        console.error('OCR pipeline failed:', error);
+    });
 }
 
 function displayAnalysis(result) {
@@ -296,6 +326,7 @@ function saveCurrentInspection() {
         status: document.getElementById('overallStatus').textContent,
         category: document.getElementById('productCategory')?.value || 'Food / Grocery',
         image,
+        reportUrl: currentScanReportUrl,
         report: generateInspectionReport({
             productName: document.getElementById('productName').textContent,
             manufacturer: document.getElementById('manufacturer').textContent,
@@ -368,19 +399,23 @@ function restoreRetakeInspection() {
 
 function resetScanner() {
     selectedImage = null;
+    currentScanReportUrl = null;
     closeCamera();
 
     const previewContainer = document.getElementById('previewContainer');
     const extractedSection = document.getElementById('extractedSection');
     const productImage = document.getElementById('productImage');
     const analyzeButton = document.getElementById('analyzeButton');
+    const downloadReportBtn = document.getElementById('downloadReportBtn');
 
     if (previewContainer) previewContainer.classList.add('hidden');
     if (extractedSection) extractedSection.classList.add('hidden');
     if (productImage) productImage.value = '';
     if (analyzeButton) analyzeButton.disabled = true;
+    if (downloadReportBtn) downloadReportBtn.classList.add('hidden');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 let selectedImage = null;
+let currentScanReportUrl = null;

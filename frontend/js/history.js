@@ -5,6 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const emptyHistory = document.getElementById('emptyHistory');
 
     function downloadInspection(item) {
+        if (item.reportUrl) {
+            const link = document.createElement('a');
+            link.href = 'http://127.0.0.1:8000' + item.reportUrl;
+            link.download = (item.productName || 'inspection-report').replace(/[^a-z0-9]+/gi, '_').toLowerCase() + '.pdf';
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            return;
+        }
+
         const reportText = item.report || [
             'LegalMetrix Inspection Report',
             '===========================',
